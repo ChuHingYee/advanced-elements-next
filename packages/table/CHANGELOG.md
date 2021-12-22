@@ -1,5 +1,9 @@
 # @advanced-elements/table ChangeLog
 
+## v2.0.2
+
+_2021-12-22_
+
 ## v2.0.1
 
 _2021-12-22_

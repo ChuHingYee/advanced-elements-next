@@ -1,6 +1,6 @@
 {
   "name": "@advanced-elements/table",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "Table from advanced-elements",
   "scripts": {
     "test": "jest"
