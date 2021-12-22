@@ -1,0 +1,24 @@
+{
+  "name": "play",
+  "version": "0.0.0",
+  "scripts": {
+    "dev": "vite",
+    "build": "vue-tsc --noEmit && vite build",
+    "serve": "vite preview"
+  },
+  "dependencies": {
+    "@advanced-elements/table": "link:../packages/table",
+    "element-plus": "^1.2.0-beta.6",
+    "vue-router": "4"
+  },
+  "devDependencies": {
+    "@types/node": "^17.0.2",
+    "@vitejs/plugin-vue": "^1.9.3",
+    "typescript": "^4.4.3",
+    "unplugin-vue-components": "^0.17.2",
+    "vite": "^2.6.4",
+    "vue": "^3.2.22",
+    "vue-router": "^4.0.0-0",
+    "vue-tsc": "^0.3.0"
+  }
+}
