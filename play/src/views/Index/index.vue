@@ -90,27 +90,29 @@ const refresh = function () {
 </script>
 
 <template>
-  <AdvTable
+  <adv-table
     ref="table"
     :format-maps="maps"
     :source="request"
     :headers="headers"
     :is-record="false"
     :client-height="200"
-    size="large"
   >
     <template #footer>
       <el-button @click="refresh">获取数据</el-button>
     </template>
-  </AdvTable>
-  <AdvTable
+  </adv-table>
+  <adv-table
     :source="request1"
     :headers="headers"
     :is-record="true"
     :client-height="200"
     :page-size="2"
     :page-sizes="[2, 3]"
-  ></AdvTable>
+  >
+    <el-table-column prop="name" label="姓名" width="180" />
+    <el-table-column prop="id" label="id" width="180" />
+  </adv-table>
 </template>
 
 <style></style>

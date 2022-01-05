@@ -35,5 +35,6 @@ $ pnpm add @advanced-elements/table@'>=2'
 
 ## Tips
 
-version2 for Vue3
-version1 for Vue2
+version2.x for Vue3
+
+version1.x for Vue2

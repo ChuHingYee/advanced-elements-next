@@ -17,7 +17,7 @@ importers:
       autoprefixer: ^10.4.0
       chalk: ^4.1.2
       conventional-commits-parser: ^3.2.3
-      element-plus: ^1.2.0-beta.6
+      element-plus: 1.3.0-beta.1
       esbuild-register: ^3.2.0
       eslint: ^8.2.0
       eslint-config-prettier: ^8.3.0
@@ -58,7 +58,7 @@ importers:
       autoprefixer: 10.4.0
       chalk: 4.1.2
       conventional-commits-parser: 3.2.3
-      element-plus: 1.2.0-beta.6
+      element-plus: 1.3.0-beta.1
       esbuild-register: 3.2.1
       eslint: 8.5.0
       eslint-config-prettier: 8.3.0_eslint@8.5.0
@@ -94,7 +94,7 @@ importers:
       '@vue/vue3-jest': ^27.0.0-alpha.4
       babel-core: ^7.0.0-bridge.0
       babel-jest: ^27.4.2
-      element-plus: ^1.2.0-beta.6
+      element-plus: 1.3.0-beta.1
       jest: ^27.4.3
       ts-jest: ^27.1.0
       typescript: ^4.5.2
@@ -102,7 +102,7 @@ importers:
       vue-router: '4'
     dependencies:
       '@vue/compiler-sfc': 3.2.26
-      element-plus: 1.2.0-beta.6_vue@3.2.26
+      element-plus: 1.3.0-beta.1_vue@3.2.26
       typescript: 4.5.4
       vue: 3.2.26
       vue-router: 4.0.12_vue@3.2.26
@@ -121,7 +121,7 @@ importers:
       '@advanced-elements/table': link:../packages/table
       '@types/node': ^17.0.2
       '@vitejs/plugin-vue': ^1.9.3
-      element-plus: ^1.2.0-beta.6
+      element-plus: 1.3.0-beta.1
       typescript: ^4.4.3
       unplugin-vue-components: ^0.17.2
       vite: ^2.6.4
@@ -130,7 +130,7 @@ importers:
       vue-tsc: ^0.3.0
     dependencies:
       '@advanced-elements/table': link:../packages/table
-      element-plus: 1.2.0-beta.6_vue@3.2.26
+      element-plus: 1.3.0-beta.1_vue@3.2.26
       vue-router: 4.0.12_vue@3.2.26
     devDependencies:
       '@types/node': 17.0.2
@@ -1481,6 +1481,10 @@ packages:
     dependencies:
       '@cspotcode/source-map-consumer': 0.8.0
     dev: true
+
+  /@ctrl/tinycolor/3.4.0:
+    resolution: {integrity: sha1-w8WuVDyJfKqcKmhjC+01W+X5mQ8=, tarball: '@ctrl/tinycolor/download/@ctrl/tinycolor-3.4.0.tgz'}
+    engines: {node: '>=10'}
 
   /@docsearch/css/1.0.0-alpha.28:
     resolution: {integrity: sha1-yKLNjBuzpoVcUYkunb2rXUL+biM=, tarball: '@docsearch/css/download/@docsearch/css-1.0.0-alpha.28.tgz'}
@@ -3334,7 +3338,7 @@ packages:
     dev: true
 
   /dayjs/1.10.7:
-    resolution: {integrity: sha1-LPX5Gt0oEWdIRAhmoKHSbzps5Gg=, tarball: dayjs/download/dayjs-1.10.7.tgz}
+    resolution: {integrity: sha512-P6twpd70BcPK34K26uJ1KT3wlhpuOAPoMwJzpsIWUxHZ7wpmbdZL/hQqBDfz7hGurYSa5PhzdhDHtt319hL3ig==, tarball: dayjs/download/dayjs-1.10.7.tgz}
 
   /debug/2.6.9:
     resolution: {integrity: sha1-XRKFFd8TT/Mn6QpMk/Tgd6U2NB8=, tarball: debug/download/debug-2.6.9.tgz}
@@ -3487,11 +3491,12 @@ packages:
     resolution: {integrity: sha512-erwx5r69B/WFfFuF2jcNN0817BfDBdC4765kQ6WltOMuwsimlQo3JTEq0Cle+wpHralwdeX3OfAtw/mHxPK0Wg==, tarball: electron-to-chromium/download/electron-to-chromium-1.4.24.tgz}
     dev: true
 
-  /element-plus/1.2.0-beta.6:
-    resolution: {integrity: sha512-8EdSIR/5/FHcSB8w1diAh+gJMHgxIvxuZoayY99k6taAR1QyEFHuPTgFccZLopJ1+iP4UEsZFz49l57qS08Utw==, tarball: element-plus/download/element-plus-1.2.0-beta.6.tgz}
+  /element-plus/1.3.0-beta.1:
+    resolution: {integrity: sha512-q3vMaKElPpuSTeIF7kuDmMOE+N1YVCCIG3fshXpz6qgjnxPbgZumVM0qGfhr8DTu9JxRbBoDok49dqtX/BWn3w==, tarball: element-plus/download/element-plus-1.3.0-beta.1.tgz}
     peerDependencies:
       vue: ^3.2.0
     dependencies:
+      '@ctrl/tinycolor': 3.4.0
       '@element-plus/icons-vue': 0.2.4
       '@popperjs/core': 2.11.0
       '@vueuse/core': 7.4.0
@@ -3504,11 +3509,12 @@ packages:
       - '@vue/composition-api'
     dev: true
 
-  /element-plus/1.2.0-beta.6_vue@3.2.26:
-    resolution: {integrity: sha512-8EdSIR/5/FHcSB8w1diAh+gJMHgxIvxuZoayY99k6taAR1QyEFHuPTgFccZLopJ1+iP4UEsZFz49l57qS08Utw==, tarball: element-plus/download/element-plus-1.2.0-beta.6.tgz}
+  /element-plus/1.3.0-beta.1_vue@3.2.26:
+    resolution: {integrity: sha512-q3vMaKElPpuSTeIF7kuDmMOE+N1YVCCIG3fshXpz6qgjnxPbgZumVM0qGfhr8DTu9JxRbBoDok49dqtX/BWn3w==, tarball: element-plus/download/element-plus-1.3.0-beta.1.tgz}
     peerDependencies:
       vue: ^3.2.0
     dependencies:
+      '@ctrl/tinycolor': 3.4.0
       '@element-plus/icons-vue': 0.2.4_vue@3.2.26
       '@popperjs/core': 2.11.0
       '@vueuse/core': 7.4.0_vue@3.2.26

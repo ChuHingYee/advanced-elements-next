@@ -68,7 +68,6 @@ import {
   ElPagination,
   ElButton,
   useSize,
-  buttonGroupContextKey,
 } from 'element-plus'
 import tableProps from 'element-plus/lib/components/table/src/table/defaults.js'
 import type { TableProps } from 'element-plus/lib/components/table/src/table/defaults.js'
@@ -77,7 +76,6 @@ import { formatData } from './utils'
 import {
   defineComponent,
   ref,
-  inject,
   computed,
   watch,
   onMounted,
@@ -103,8 +101,7 @@ export default defineComponent({
     const route = instance.appContext.config.globalProperties
       .$route as RouteLocationNormalizedLoaded
     const pagination = ref()
-    const buttonGroupContext = inject(buttonGroupContextKey, undefined)
-    const buttonSize = useSize(computed(() => buttonGroupContext?.size))
+    const buttonSize = useSize()
     const defaultTableConfig = ref({
       stripe: true,
       border: true,
@@ -209,7 +206,6 @@ export default defineComponent({
     }
     function handleCurrentPageChange(val: number) {
       if (props.isRecord && !props.isManual) {
-        console.log('in')
         setPageLog(val, localPageSize.value)
       }
       request()
