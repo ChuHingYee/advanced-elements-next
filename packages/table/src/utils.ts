@@ -10,7 +10,7 @@ export function formatData(source: any, maps: FormatMaps) {
     if (maps[key] === 'data') {
       result.data = source[key]
     } else if (maps[key]) {
-      result[key] = source[key] || 0
+      result[maps[key]] = source[key] || 0
     }
   })
   return result
