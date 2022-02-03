@@ -3,6 +3,8 @@ import AdvTable from '@advanced-elements/table'
 import type { FormatMaps } from '@advanced-elements/table'
 import { useRouter } from 'vue-router'
 import { ref } from 'vue'
+
+type RequestFunc = (...args: any) => Promise<any>
 const router = useRouter()
 console.log(router)
 const table = ref()
@@ -27,11 +29,9 @@ const headers = ref([
 ])
 const maps: FormatMaps = {
   d: 'data',
-  s: 'size',
-  tp: 'totalPage',
   t: 'total',
 }
-const request: any = function () {
+const request: RequestFunc = function () {
   return new Promise((resolve) => {
     setTimeout(() => {
       resolve({
@@ -53,14 +53,12 @@ const request: any = function () {
             name: 2,
           },
         ],
-        s: 2,
-        tp: 2,
-        t: 4,
+        t: 2,
       })
     }, 500)
   })
 }
-const request1: any = function (querys: any) {
+const request1: RequestFunc = function (querys: any) {
   console.log(querys)
   return new Promise((resolve) => {
     setTimeout(() => {
@@ -75,13 +73,21 @@ const request1: any = function (querys: any) {
             name: 2,
           },
         ],
-        size: 2,
-        totalPage: 2,
         total: 4,
       })
     }, 500)
   })
 }
+const data = [
+  {
+    id: '1',
+    name: 1,
+  },
+  {
+    id: '2',
+    name: 2,
+  },
+]
 const refresh = function () {
   table.value.refresh(true)
 }
@@ -112,6 +118,34 @@ const refresh = function () {
   >
     <el-table-column prop="name" label="姓名" width="180" />
     <el-table-column prop="id" label="id" width="180" />
+  </adv-table>
+  <adv-table
+    :source="request1"
+    :headers="headers"
+    :is-record="true"
+    :is-manual="true"
+    :client-height="200"
+    :page-size="2"
+    :page-sizes="[2, 3]"
+  >
+    <el-table-column prop="name" label="姓名" width="180" />
+    <el-table-column prop="id" label="id" width="180" />
+  </adv-table>
+  <adv-table
+    :data="data"
+    :headers="headers"
+    :client-height="200"
+    :page-size="2"
+    :page-sizes="[2, 3]"
+  >
+    <el-table-column prop="name" label="姓名" width="180" />
+    <el-table-column prop="id" label="id" width="180">
+      <template #default="scope">
+        <div style="display: flex; align-items: center">
+          <span style="margin-left: 10px">{{ scope.row.name }}</span>
+        </div>
+      </template>
+    </el-table-column>
   </adv-table>
 </template>
 

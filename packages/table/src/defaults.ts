@@ -4,16 +4,14 @@ import { paginationProps } from 'element-plus'
 
 export type SoruceData = {
   data: any[]
-  size: number
   total: number
-  totalPage: number
 }
 
 export type FormatMaps = {
   [key: string]: keyof SoruceData
 }
 
-export type Source = (...args: any[]) => Promise<SoruceData>
+export type Source = (...args: any[]) => Promise<any>
 
 export interface CustomHeader {
   label: string
@@ -58,5 +56,11 @@ export const advProps = {
   },
   formatMaps: {
     type: Object as PropType<FormatMaps>,
+    default: () => {
+      return {
+        data: 'data',
+        total: 'total',
+      }
+    },
   },
 }

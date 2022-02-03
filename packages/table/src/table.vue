@@ -5,7 +5,7 @@
       :element-loading-spinner="loadingSvg"
       element-loading-svg-view-box="-10, -10, 50, 50"
       class="advtable-main"
-      v-bind="computedTableProps"
+      v-bind="customTableProps"
     >
       <el-table-column
         v-for="header in headers"
@@ -22,27 +22,17 @@
       v-if="hasPage"
       ref="page"
       class="advtable-page"
-      :class="computedPageClass"
+      :class="paginationClass"
     >
       <template v-if="isManual">
         <el-button
-          v-if="localCurrentPage !== localTotalPage && localCurrentPage !== 0"
+          v-if="hasMore"
           :size="buttonSize"
-          icon="el-icon-refresh-right"
           :loading="localLoading"
           @click="loadDataByManual"
           >加载更多</el-button
         >
-        <div
-          v-if="
-            localCurrentPage === localTotalPage &&
-            localCurrentPage !== 0 &&
-            localData.length !== 0
-          "
-          class="table-manual__btn"
-        >
-          没有更多了
-        </div>
+        <span v-else-if="!hasMore && !localLoading">没有更多了</span>
       </template>
       <template v-else>
         <slot name="footer"></slot>
@@ -107,7 +97,6 @@ export default defineComponent({
       border: true,
     })
     const localCurrentPage = ref(1)
-    const localTotalPage = ref(0)
     const localPageLayout = ref('total, sizes, prev, pager, next, jumper')
     const localPageSize = ref(10)
     const localPageSizes = ref([10, 20, 30])
@@ -125,12 +114,12 @@ export default defineComponent({
           L 15 15
         " style="stroke-width: 4px; fill: rgba(0, 0, 0, 0)"/>
       `)
-    const computedPageClass = computed(() => {
+    const paginationClass = computed(() => {
       const _sticky = isSticky.value ? 'advtable-page__sticky' : ''
-      const _manual = props.isManual ? 'table-manual' : 'true'
+      const _manual = props.isManual ? 'advtable-page__manual' : ''
       return `${_sticky} ${_manual}`
     })
-    const computedTableProps = computed<TableProps<any>>(() => {
+    const customTableProps = computed<TableProps<any>>(() => {
       const _props = {
         ...defaultTableConfig.value,
         data: hasSource.value ? localData.value : props.data,
@@ -151,6 +140,10 @@ export default defineComponent({
     })
     const pageSizes = computed(() => {
       return props.pageSizes || localPageSizes.value
+    })
+    const hasMore = computed(() => {
+      const current = localPageSize.value * localCurrentPage.value
+      return current < localTotal.value && localCurrentPage.value !== 0
     })
     watch(
       () => {
@@ -174,15 +167,12 @@ export default defineComponent({
           props
             .source(querys)
             .then((res) => {
-              if (props.formatMaps) {
-                res = formatData(res, props.formatMaps)
-              }
-              localTotal.value = res.total
-              localTotalPage.value = res.totalPage
+              const formatResponse = formatData(res, props.formatMaps)
+              localTotal.value = formatResponse.total
               if (props.isManual) {
-                localData.value = localData.value.concat(res.data)
+                localData.value = localData.value.concat(formatResponse.data)
               } else {
-                localData.value = res.data
+                localData.value = formatResponse.data
               }
               resolve()
             })
@@ -195,12 +185,8 @@ export default defineComponent({
       })
     }
     const loadDataByManual = function () {
-      if (
-        localCurrentPage.value !== localTotalPage.value &&
-        localTotalPage.value !== 0
-      ) {
-        handleCurrentPageChange(localCurrentPage.value + 1)
-      } else {
+      if (hasMore.value) {
+        localCurrentPage.value = localCurrentPage.value + 1
         handleCurrentPageChange(localCurrentPage.value)
       }
     }
@@ -301,14 +287,14 @@ export default defineComponent({
       localCurrentPage,
       localPageLayout,
       localTotal,
-      localTotalPage,
       localPageSize,
       pageSizes,
       localData,
       localLoading,
       isSticky,
-      computedPageClass,
-      computedTableProps,
+      paginationClass,
+      customTableProps,
+      hasMore,
       setLoading,
       setPageLog,
       loadDataByManual,
@@ -340,25 +326,13 @@ export default defineComponent({
       bottom: 0;
       z-index: 8;
     }
-  }
-  &-manual {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 40px;
-    &__btn {
-      width: 220px;
-      height: 32px;
-      color: #606266;
-      font-size: 12px;
-      line-height: 32px;
-      text-align: center;
-      background: #fff;
-      border: 1px solid #dcdfe6;
-      border-radius: 3px;
-    }
-    ::v-deep .el-button {
-      width: 220px;
+    &__manual {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 40px;
+      color: var(--el-color-info);
+      font-size: var(--el-font-size-base);
     }
   }
 }
