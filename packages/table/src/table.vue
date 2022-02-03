@@ -69,8 +69,8 @@ import {
   ElButton,
   useSize,
 } from 'element-plus'
-import tableProps from 'element-plus/lib/components/table/src/table/defaults.js'
-import type { TableProps } from 'element-plus/lib/components/table/src/table/defaults.js'
+import tableProps from 'element-plus/lib/components/table/src/table/defaults'
+import type { TableProps } from 'element-plus/lib/components/table/src/table/defaults'
 import { advProps } from './defaults'
 import { formatData } from './utils'
 import {

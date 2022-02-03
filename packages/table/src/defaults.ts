@@ -1,5 +1,5 @@
 import type { PropType } from 'vue'
-import tableProps from 'element-plus/lib/components/table/src/table/defaults.js'
+import tableProps from 'element-plus/lib/components/table/src/table/defaults'
 import { paginationProps } from 'element-plus'
 
 export type SoruceData = {

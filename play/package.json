@@ -8,7 +8,7 @@
   },
   "dependencies": {
     "@advanced-elements/table": "link:../packages/table",
-    "element-plus": "1.3.0-beta.1",
+    "element-plus": "1.3.0-beta.10",
     "vue-router": "4"
   },
   "devDependencies": {
