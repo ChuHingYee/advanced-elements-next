@@ -1,5 +1,17 @@
 # @advanced-elements/table ChangeLog
 
+## v2.0.4
+
+_2022-02-03_
+
+### Bugfixes
+
+- fix: remove useless options (e2dfed1)
+
+### Updates
+
+- docs: update docs (d9ca702)
+
 ## v2.0.3
 
 _2022-01-05_
