@@ -1,5 +1,18 @@
 # @advanced-elements/table ChangeLog
 
+## v2.0.5
+
+_2022-02-03_
+
+### Bugfixes
+
+- fix: fix bugs when manually import element-plus (7d85520)
+- fix: remove useless options (e2dfed1)
+
+### Updates
+
+- docs: update docs (d9ca702)
+
 ## v2.0.4
 
 _2022-02-03_
