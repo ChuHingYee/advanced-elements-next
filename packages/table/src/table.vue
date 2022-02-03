@@ -1,12 +1,6 @@
 <template>
   <div class="advtable">
-    <el-table
-      v-loading="localLoading"
-      :element-loading-spinner="loadingSvg"
-      element-loading-svg-view-box="-10, -10, 50, 50"
-      class="advtable-main"
-      v-bind="customTableProps"
-    >
+    <el-table v-bind="customTableProps" ref="table" class="advtable-main">
       <el-table-column
         v-for="header in headers"
         :key="header.prop"
@@ -25,11 +19,7 @@
       :class="paginationClass"
     >
       <template v-if="isManual">
-        <el-button
-          v-if="hasMore"
-          :size="buttonSize"
-          :loading="localLoading"
-          @click="loadDataByManual"
+        <el-button v-if="hasMore" :size="buttonSize" @click="loadDataByManual"
           >加载更多</el-button
         >
         <span v-else-if="!hasMore && !localLoading">没有更多了</span>
@@ -58,7 +48,12 @@ import {
   ElPagination,
   ElButton,
   useSize,
+  ElLoading,
 } from 'element-plus'
+import 'element-plus/es/components/table/style/css'
+import 'element-plus/es/components/pagination/style/css'
+import 'element-plus/es/components/button/style/css'
+import type { LoadingInstance } from 'element-plus/lib/components/loading/src/loading'
 import tableProps from 'element-plus/lib/components/table/src/table/defaults'
 import type { TableProps } from 'element-plus/lib/components/table/src/table/defaults'
 import { advProps } from './defaults'
@@ -86,6 +81,8 @@ export default defineComponent({
   inheritAttrs: false,
   props: advProps,
   setup(props, ctx) {
+    let loadingInstance: LoadingInstance
+    const table = ref()
     const instance = getCurrentInstance()!
     const router = instance.appContext.config.globalProperties.$router as Router
     const route = instance.appContext.config.globalProperties
@@ -214,6 +211,14 @@ export default defineComponent({
     }
     function setLoading(flag: boolean) {
       localLoading.value = flag
+      if (flag) {
+        loadingInstance = ElLoading.service({
+          target: table.value.$el,
+          fullscreen: false,
+        })
+      } else {
+        loadingInstance.close()
+      }
     }
     function setPageLog(page: number, count: number) {
       if (router) {
@@ -278,6 +283,7 @@ export default defineComponent({
       }
     })
     return {
+      table,
       pagination,
       buttonSize,
       hasSource,
