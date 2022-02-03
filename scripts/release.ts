@@ -161,7 +161,7 @@ const tag = async (cwd: string, shortName: string, version: string) => {
   await execa('git', ['tag', tagName], { cwd, stdio: 'inherit' })
 }
 
-const updateChangelog = (
+const updateChangelog = async (
   commits: Commit[],
   cwd: string,
   shortName: string,
@@ -280,8 +280,6 @@ const updatePackage = async (
       chalk`{cyan Releasing \`${packageName}\`} from {grey packages/${shortName}}\n`
     )
 
-    await buildFile(packageName)
-
     const commits = await getCommits(shortName)
 
     if (!commits.length) {
@@ -302,9 +300,15 @@ const updatePackage = async (
     log(chalk`{blue New Version}: ${newVersion}\n`)
 
     await updatePackage(cwd, pkg, newVersion)
-    updateChangelog(commits, cwd, shortName, newVersion)
+
+    await buildFile(packageName)
+
+    await updateChangelog(commits, cwd, shortName, newVersion)
+
     await commitChanges(cwd, shortName, newVersion)
+
     await publish(cwd)
+
     await tag(cwd, shortName, newVersion)
   } catch (e) {
     log(e)
