@@ -6,9 +6,9 @@
         :key="header.prop"
         v-bind="header"
       >
-        <template #default="{ row }">
-          {{ header.format ? header.format(row) : row[header.prop] }}
-        </template>
+        <template #default="{ row }">{{
+          header.format ? header.format(row) : row[header.prop]
+        }}</template>
       </el-table-column>
       <slot></slot>
     </el-table>
@@ -19,7 +19,11 @@
       :class="paginationClass"
     >
       <template v-if="isManual">
-        <el-button v-if="hasMore" :size="buttonSize" @click="loadDataByManual"
+        <el-button
+          v-if="hasMore"
+          :size="buttonSize"
+          :loading="localLoading"
+          @click="loadDataByManual"
           >加载更多</el-button
         >
         <span v-else-if="!hasMore && !localLoading">没有更多了</span>
@@ -101,16 +105,6 @@ export default defineComponent({
     const localData = ref<any[]>([])
     const localLoading = ref(false)
     const isSticky = ref(false)
-    const loadingSvg = ref(`
-        <path class="path" d="
-          M 30 15
-          L 28 17
-          M 25.61 25.61
-          A 15 15, 0, 0, 1, 15 30
-          A 15 15, 0, 1, 1, 27.99 7.5
-          L 15 15
-        " style="stroke-width: 4px; fill: rgba(0, 0, 0, 0)"/>
-      `)
     const paginationClass = computed(() => {
       const _sticky = isSticky.value ? 'advtable-page__sticky' : ''
       const _manual = props.isManual ? 'advtable-page__manual' : ''
@@ -288,7 +282,6 @@ export default defineComponent({
       buttonSize,
       hasSource,
       defaultTableConfig,
-      loadingSvg,
       request,
       localCurrentPage,
       localPageLayout,
