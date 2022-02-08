@@ -1,15 +1,29 @@
 <template>
-  <div class="advtable">
+  <div v-if="isInit" class="advtable">
+    <div v-if="hasHeader" class="advtable-header">
+      <div class="advtable-header__left">
+        <slot name="header-left"></slot>
+      </div>
+      <div class="advtable-header__right">
+        <slot name="header-right"></slot>
+        <column-setting
+          v-if="headers.length > 0 && hasColumnSetting"
+          v-model:headers="localHeader"
+        ></column-setting>
+      </div>
+    </div>
     <el-table v-bind="customTableProps" ref="table" class="advtable-main">
-      <el-table-column
-        v-for="header in headers"
-        :key="header.prop"
-        v-bind="header"
-      >
-        <template #default="{ row }">{{
-          header.format ? header.format(row) : row[header.prop]
-        }}</template>
-      </el-table-column>
+      <template v-for="header in localHeader" :key="header.prop">
+        <el-table-column
+          v-if="header.isVisible"
+          :key="header.prop"
+          v-bind="header"
+        >
+          <template #default="{ row }">{{
+            header.format ? header.format(row) : row[header.prop]
+          }}</template>
+        </el-table-column>
+      </template>
       <slot></slot>
     </el-table>
     <div
@@ -51,15 +65,14 @@ import {
   ElTableColumn,
   ElPagination,
   ElButton,
-  useSize,
   ElLoading,
+  useSize,
 } from 'element-plus'
+import ColumnSetting from './columnSetting.vue'
 import 'element-plus/es/components/table/style/css'
 import 'element-plus/es/components/pagination/style/css'
 import 'element-plus/es/components/button/style/css'
-import type { LoadingInstance } from 'element-plus/lib/components/loading/src/loading'
 import tableProps from 'element-plus/lib/components/table/src/table/defaults'
-import type { TableProps } from 'element-plus/lib/components/table/src/table/defaults'
 import { advProps } from './defaults'
 import { formatData } from './utils'
 import {
@@ -70,7 +83,11 @@ import {
   onMounted,
   nextTick,
   getCurrentInstance,
+  useSlots,
 } from 'vue'
+import type { LocalHeader } from './defaults'
+import type { LoadingInstance } from 'element-plus/lib/components/loading/src/loading'
+import type { TableProps } from 'element-plus/lib/components/table/src/table/defaults'
 import type { Router, RouteLocationNormalizedLoaded } from 'vue-router'
 type TablePropsKeys = keyof typeof tableProps
 
@@ -81,11 +98,14 @@ export default defineComponent({
     ElTableColumn,
     ElPagination,
     ElButton,
+    ColumnSetting,
   },
   inheritAttrs: false,
   props: advProps,
   setup(props, ctx) {
     let loadingInstance: LoadingInstance
+    const slots = useSlots()
+    const isInit = ref(false)
     const table = ref()
     const instance = getCurrentInstance()!
     const router = instance.appContext.config.globalProperties.$router as Router
@@ -105,6 +125,7 @@ export default defineComponent({
     const localData = ref<any[]>([])
     const localLoading = ref(false)
     const isSticky = ref(false)
+    const localHeader = ref<LocalHeader[]>([])
     const paginationClass = computed(() => {
       const _sticky = isSticky.value ? 'advtable-page__sticky' : ''
       const _manual = props.isManual ? 'advtable-page__manual' : ''
@@ -135,6 +156,11 @@ export default defineComponent({
     const hasMore = computed(() => {
       const current = localPageSize.value * localCurrentPage.value
       return current < localTotal.value && localCurrentPage.value !== 0
+    })
+    const hasHeader = computed(() => {
+      return (
+        slots['header-left'] || slots['header-right'] || props.hasColumnSetting
+      )
     })
     watch(
       () => {
@@ -260,6 +286,14 @@ export default defineComponent({
       })
     }
     onMounted(() => {
+      if (props.headers && props.headers.length > 0) {
+        localHeader.value = props.headers.map((header) => {
+          return {
+            isVisible: true,
+            ...header,
+          }
+        })
+      }
       if (props.pageSize) {
         localPageSize.value = props.pageSize
       }
@@ -272,11 +306,15 @@ export default defineComponent({
           localPageSize.value = Number(s as string)
         }
       }
+      isInit.value = true
       if (props.autoRequest) {
-        request()
+        nextTick(() => {
+          request()
+        })
       }
     })
     return {
+      isInit,
       table,
       pagination,
       buttonSize,
@@ -287,6 +325,7 @@ export default defineComponent({
       localPageLayout,
       localTotal,
       localPageSize,
+      localHeader,
       pageSizes,
       localData,
       localLoading,
@@ -294,6 +333,7 @@ export default defineComponent({
       paginationClass,
       customTableProps,
       hasMore,
+      hasHeader,
       setLoading,
       setPageLog,
       loadDataByManual,
@@ -309,6 +349,31 @@ export default defineComponent({
 <style lang="scss">
 .advtable {
   position: relative;
+
+  &-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 40px;
+    &__left,
+    &__right {
+      display: flex;
+      align-items: center;
+      .right {
+        &-icon {
+          margin-left: 12px;
+          color: var(--el-button-text-color);
+          cursor: pointer;
+        }
+      }
+    }
+    &__left {
+      justify-content: flex-start;
+    }
+    &__right {
+      justify-content: flex-end;
+    }
+  }
 
   &-main {
     margin-bottom: 10px;

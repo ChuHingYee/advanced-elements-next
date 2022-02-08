@@ -15,6 +15,7 @@ module.exports = defineConfig({
     browser: true,
     node: true,
     'jest/globals': true,
+    'vue/setup-compiler-macros': true,
   },
   plugins: ['@typescript-eslint', 'jest', 'prettier'],
   extends: [
@@ -66,6 +67,7 @@ module.exports = defineConfig({
     'vue/require-default-prop': 'off',
     'vue/require-explicit-emits': 'off',
     'vue/multi-word-component-names': 'off',
+    'vue/script-setup-uses-vars': 'error',
 
     // prettier
     'prettier/prettier': 'error',

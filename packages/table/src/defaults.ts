@@ -16,13 +16,22 @@ export type Source = (...args: any[]) => Promise<any>
 export interface CustomHeader {
   label: string
   prop: string
+  isVisible?: boolean
   format?: (...args: any[]) => any
   [key: string]: any
+}
+
+export interface LocalHeader extends Omit<CustomHeader, 'isVisible'> {
+  isVisible: boolean
 }
 
 export const advProps = {
   ...tableProps,
   ...paginationProps,
+  hasColumnSetting: {
+    type: Boolean,
+    default: true,
+  },
   hasPage: {
     type: Boolean,
     default: true,
