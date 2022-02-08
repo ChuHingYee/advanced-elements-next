@@ -35,7 +35,7 @@
       <template v-if="isManual">
         <el-button
           v-if="hasMore"
-          :size="buttonSize"
+          :size="elementSize"
           :loading="localLoading"
           @click="loadDataByManual"
           >加载更多</el-button
@@ -47,6 +47,7 @@
         <el-pagination
           ref="pagination"
           v-model:currentPage="localCurrentPage"
+          :small="elementSize === 'small'"
           :page-size="localPageSize"
           :page-sizes="pageSizes"
           :layout="localPageLayout"
@@ -112,7 +113,7 @@ export default defineComponent({
     const route = instance.appContext.config.globalProperties
       .$route as RouteLocationNormalizedLoaded
     const pagination = ref()
-    const buttonSize = useSize()
+    const elementSize = useSize()
     const defaultTableConfig = ref({
       stripe: true,
       border: true,
@@ -317,7 +318,7 @@ export default defineComponent({
       isInit,
       table,
       pagination,
-      buttonSize,
+      elementSize,
       hasSource,
       defaultTableConfig,
       request,
