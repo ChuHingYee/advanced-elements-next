@@ -18,6 +18,8 @@ export type Source = (...args: any[]) => Promise<any>
 export interface PollingOptions {
   time: number
   immediate: boolean
+  startTip?: string
+  stopTip?: string
   onChange?: Fn
   onSuccess?: Fn
   onFail?: Fn

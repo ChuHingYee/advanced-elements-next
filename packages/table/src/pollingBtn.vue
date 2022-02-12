@@ -5,14 +5,15 @@
       :class="[isPolling ? 'is-loading' : '', 'polling-icon']"
     >
       <icon-refresh-right v-if="isPolling"></icon-refresh-right>
-      <icon-refresh v-else></icon-refresh> </el-icon
-    >开始轮询
+      <icon-refresh v-else></icon-refresh>
+    </el-icon>
+    {{ isPolling ? stopTip : startTip }}
   </el-button>
 </template>
 
 <script lang="ts" setup>
 import type { PropType } from 'vue'
-import { inject, onBeforeUnmount } from 'vue'
+import { inject, computed, onBeforeUnmount } from 'vue'
 import { ElIcon, ElButton, useSize } from 'element-plus'
 import 'element-plus/es/components/icon/style/css'
 import 'element-plus/es/components/button/style/css'
@@ -37,6 +38,12 @@ const props = defineProps({
   },
 })
 const emits = defineEmits(['update:isPolling'])
+const startTip = computed(() => {
+  return props.options.startTip || '开始轮询'
+})
+const stopTip = computed(() => {
+  return props.options.stopTip || '停止轮询'
+})
 const isPolling = useVModel(props, 'isPolling', emits)
 const elementSize = useSize()
 const advTable = inject('advTable', {} as AdvTableContext)
