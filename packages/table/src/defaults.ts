@@ -32,6 +32,10 @@ export const advProps = {
     type: Boolean,
     default: true,
   },
+  hasRefreshBtn: {
+    type: Boolean,
+    default: false,
+  },
   hasPage: {
     type: Boolean,
     default: true,

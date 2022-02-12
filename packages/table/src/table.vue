@@ -6,6 +6,9 @@
       </div>
       <div class="advtable-header__right">
         <slot name="header-right"></slot>
+        <el-icon v-if="hasRefreshBtn" :size="18" @click="refresh(false)">
+          <icon-refresh-right></icon-refresh-right>
+        </el-icon>
         <column-setting
           v-if="headers.length > 0 && hasColumnSetting"
           v-model:headers="localHeader"
@@ -67,8 +70,10 @@ import {
   ElPagination,
   ElButton,
   ElLoading,
+  ElIcon,
   useSize,
 } from 'element-plus'
+import { RefreshRight as IconRefreshRight } from '@element-plus/icons-vue'
 import ColumnSetting from './columnSetting.vue'
 import 'element-plus/es/components/table/style/css'
 import 'element-plus/es/components/pagination/style/css'
@@ -99,6 +104,8 @@ export default defineComponent({
     ElTableColumn,
     ElPagination,
     ElButton,
+    ElIcon,
+    IconRefreshRight,
     ColumnSetting,
   },
   inheritAttrs: false,
@@ -160,7 +167,10 @@ export default defineComponent({
     })
     const hasHeader = computed(() => {
       return (
-        slots['header-left'] || slots['header-right'] || props.hasColumnSetting
+        slots['header-left'] ||
+        slots['header-right'] ||
+        props.hasColumnSetting ||
+        props.hasRefreshBtn
       )
     })
     watch(
@@ -255,26 +265,27 @@ export default defineComponent({
       }
     }
     function refresh(flag: boolean) {
-      if (hasSource.value) {
-        localData.value = []
-        if (flag) {
-          localCurrentPage.value = 1
-          if (props.isRecord) {
-            setPageLog(1, localPageSize.value)
+      if (localLoading.value || !hasSource.value) {
+        return
+      }
+      localData.value = []
+      if (flag || props.isManual) {
+        localCurrentPage.value = 1
+        if (props.isRecord && !props.isManual) {
+          setPageLog(1, localPageSize.value)
+        }
+      } else {
+        if (props.isRecord && route) {
+          const { p, s } = route.query
+          if (!p) {
+            localCurrentPage.value = 1
           }
-        } else {
-          if (props.isRecord && route) {
-            const { p, s } = route.query
-            if (!p) {
-              localCurrentPage.value = 1
-            }
-            if (!s) {
-              localPageSize.value = 10
-            }
+          if (!s) {
+            localPageSize.value = 10
           }
         }
-        request()
       }
+      request()
     }
     function checkIsSticky() {
       nextTick(() => {
