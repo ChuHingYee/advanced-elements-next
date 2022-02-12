@@ -11,9 +11,18 @@
           v-model:isPolling="isPolling"
           :options="pollingOptions"
         ></polling-btn>
-        <el-icon v-if="hasRefreshBtn" :size="18" @click="refresh(false)">
-          <icon-refresh-right></icon-refresh-right>
-        </el-icon>
+
+        <el-tooltip content="刷新" effect="light">
+          <el-icon
+            v-if="hasRefreshBtn"
+            :size="18"
+            class="right-icon"
+            @click="refresh(false)"
+          >
+            <icon-refresh-right></icon-refresh-right>
+          </el-icon>
+        </el-tooltip>
+
         <column-setting
           v-if="headers.length > 0 && hasColumnSetting"
           v-model:headers="localHeader"
@@ -27,9 +36,9 @@
           :key="header.prop"
           v-bind="header"
         >
-          <template #default="{ row }">{{
-            header.format ? header.format(row) : row[header.prop]
-          }}</template>
+          <template #default="{ row }">
+            {{ header.format ? header.format(row) : row[header.prop] }}
+          </template>
         </el-table-column>
       </template>
       <slot></slot>
@@ -87,6 +96,7 @@ import {
   ElButton,
   ElLoading,
   ElIcon,
+  ElTooltip,
   useSize,
 } from 'element-plus'
 import { RefreshRight as IconRefreshRight } from '@element-plus/icons-vue'
@@ -95,6 +105,7 @@ import PollingBtn from './pollingBtn.vue'
 import 'element-plus/es/components/table/style/css'
 import 'element-plus/es/components/pagination/style/css'
 import 'element-plus/es/components/button/style/css'
+import 'element-plus/es/components/tooltip/style/css'
 import tableProps from 'element-plus/lib/components/table/src/table/defaults'
 import { advProps } from './defaults'
 import { formatData } from './utils'
@@ -112,6 +123,7 @@ export default defineComponent({
     ElPagination,
     ElButton,
     ElIcon,
+    ElTooltip,
     IconRefreshRight,
     ColumnSetting,
     PollingBtn,
@@ -405,19 +417,22 @@ export default defineComponent({
     &__right {
       display: flex;
       align-items: center;
-      .right {
-        &-icon {
-          margin-left: 12px;
-          color: var(--el-button-text-color);
-          cursor: pointer;
-        }
-      }
     }
     &__left {
       justify-content: flex-start;
     }
     &__right {
       justify-content: flex-end;
+      .right {
+        &-icon {
+          margin-left: 12px;
+          color: var(--el-button-text-color);
+          cursor: pointer;
+          &:hover {
+            color: var(--el-color-primary);
+          }
+        }
+      }
     }
   }
 

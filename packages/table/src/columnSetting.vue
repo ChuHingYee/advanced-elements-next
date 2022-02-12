@@ -1,9 +1,11 @@
 <template>
   <el-popover placement="bottom" trigger="click">
     <template #reference>
-      <el-icon :size="18" class="right-icon">
-        <icon-setting></icon-setting>
-      </el-icon>
+      <el-tooltip content="表头选择" effect="light">
+        <el-icon :size="18" class="right-icon">
+          <icon-setting></icon-setting>
+        </el-icon>
+      </el-tooltip>
     </template>
     <div class="advcard">
       <div class="advcard-header">
@@ -57,11 +59,18 @@
 <script lang="ts" setup>
 import type { PropType } from 'vue'
 import { ref, onMounted, nextTick } from 'vue'
-import { ElIcon, ElButton, ElPopover, ElCheckbox } from 'element-plus'
+import {
+  ElIcon,
+  ElButton,
+  ElPopover,
+  ElTooltip,
+  ElCheckbox,
+} from 'element-plus'
 import 'element-plus/es/components/icon/style/css'
 import 'element-plus/es/components/button/style/css'
 import 'element-plus/es/components/popover/style/css'
 import 'element-plus/es/components/checkbox/style/css'
+import 'element-plus/es/components/tooltip/style/css'
 import {
   Setting as IconSetting,
   CaretTop as IconCaretTop,
