@@ -6,6 +6,11 @@
       </div>
       <div class="advtable-header__right">
         <slot name="header-right"></slot>
+        <polling-btn
+          v-if="hasPollingBtn && hasSource && !isManual"
+          v-model:isPolling="isPolling"
+          :options="pollingOptions"
+        ></polling-btn>
         <el-icon v-if="hasRefreshBtn" :size="18" @click="refresh(false)">
           <icon-refresh-right></icon-refresh-right>
         </el-icon>
@@ -65,6 +70,17 @@
 
 <script lang="ts">
 import {
+  defineComponent,
+  ref,
+  computed,
+  watch,
+  onMounted,
+  nextTick,
+  provide,
+  getCurrentInstance,
+  useSlots,
+} from 'vue'
+import {
   ElTable,
   ElTableColumn,
   ElPagination,
@@ -75,22 +91,13 @@ import {
 } from 'element-plus'
 import { RefreshRight as IconRefreshRight } from '@element-plus/icons-vue'
 import ColumnSetting from './columnSetting.vue'
+import PollingBtn from './pollingBtn.vue'
 import 'element-plus/es/components/table/style/css'
 import 'element-plus/es/components/pagination/style/css'
 import 'element-plus/es/components/button/style/css'
 import tableProps from 'element-plus/lib/components/table/src/table/defaults'
 import { advProps } from './defaults'
 import { formatData } from './utils'
-import {
-  defineComponent,
-  ref,
-  computed,
-  watch,
-  onMounted,
-  nextTick,
-  getCurrentInstance,
-  useSlots,
-} from 'vue'
 import type { LocalHeader } from './defaults'
 import type { LoadingInstance } from 'element-plus/lib/components/loading/src/loading'
 import type { TableProps } from 'element-plus/lib/components/table/src/table/defaults'
@@ -107,6 +114,7 @@ export default defineComponent({
     ElIcon,
     IconRefreshRight,
     ColumnSetting,
+    PollingBtn,
   },
   inheritAttrs: false,
   props: advProps,
@@ -134,6 +142,7 @@ export default defineComponent({
     const localLoading = ref(false)
     const isSticky = ref(false)
     const localHeader = ref<LocalHeader[]>([])
+    const isPolling = ref(false)
     const paginationClass = computed(() => {
       const _sticky = isSticky.value ? 'advtable-page__sticky' : ''
       const _manual = props.isManual ? 'advtable-page__manual' : ''
@@ -170,7 +179,8 @@ export default defineComponent({
         slots['header-left'] ||
         slots['header-right'] ||
         props.hasColumnSetting ||
-        props.hasRefreshBtn
+        props.hasRefreshBtn ||
+        props.hasPollingBtn
       )
     })
     watch(
@@ -184,7 +194,7 @@ export default defineComponent({
         immediate: true,
       }
     )
-    const request = function (): Promise<void> {
+    const request = function (): Promise<any[]> {
       return new Promise((resolve) => {
         if (props.source) {
           setLoading(true)
@@ -202,13 +212,13 @@ export default defineComponent({
               } else {
                 localData.value = formatResponse.data
               }
-              resolve()
+              resolve(localData.value)
             })
             .finally(() => {
               setLoading(false)
             })
         } else {
-          resolve()
+          resolve([])
         }
       })
     }
@@ -222,6 +232,10 @@ export default defineComponent({
       if (props.isRecord && !props.isManual) {
         setPageLog(val, localPageSize.value)
       }
+      if (props.hasPollingBtn) {
+        // 停止轮询
+        isPolling.value = false
+      }
       request()
       ctx.emit('change-page', {
         page: val,
@@ -234,6 +248,10 @@ export default defineComponent({
       if (props.isRecord && !props.isManual) {
         setPageLog(1, localPageSize.value)
       }
+      if (props.hasPollingBtn) {
+        // 停止轮询
+        isPolling.value = false
+      }
       request()
       ctx.emit('change-page', {
         page: 1,
@@ -242,6 +260,10 @@ export default defineComponent({
     }
     function setLoading(flag: boolean) {
       localLoading.value = flag
+      if (isPolling.value) {
+        loadingInstance && loadingInstance.close()
+        return
+      }
       if (flag) {
         loadingInstance = ElLoading.service({
           target: table.value.$el,
@@ -265,27 +287,34 @@ export default defineComponent({
       }
     }
     function refresh(flag: boolean) {
-      if (localLoading.value || !hasSource.value) {
-        return
-      }
-      localData.value = []
-      if (flag || props.isManual) {
-        localCurrentPage.value = 1
-        if (props.isRecord && !props.isManual) {
-          setPageLog(1, localPageSize.value)
+      return new Promise((resolve, reject) => {
+        if (localLoading.value || !hasSource.value) {
+          resolve(true)
         }
-      } else {
-        if (props.isRecord && route) {
-          const { p, s } = route.query
-          if (!p) {
-            localCurrentPage.value = 1
+        if (flag || props.isManual) {
+          localCurrentPage.value = 1
+          if (props.isRecord && !props.isManual) {
+            setPageLog(1, localPageSize.value)
           }
-          if (!s) {
-            localPageSize.value = 10
+        } else {
+          if (props.isRecord && route) {
+            const { p, s } = route.query
+            if (!p) {
+              localCurrentPage.value = 1
+            }
+            if (!s) {
+              localPageSize.value = 10
+            }
           }
         }
-      }
-      request()
+        request()
+          .then(() => {
+            resolve(true)
+          })
+          .catch((e) => {
+            reject(e)
+          })
+      })
     }
     function checkIsSticky() {
       nextTick(() => {
@@ -325,6 +354,10 @@ export default defineComponent({
         })
       }
     })
+    provide('advTable', {
+      refresh,
+      localLoading,
+    })
     return {
       isInit,
       table,
@@ -332,7 +365,6 @@ export default defineComponent({
       elementSize,
       hasSource,
       defaultTableConfig,
-      request,
       localCurrentPage,
       localPageLayout,
       localTotal,
@@ -342,10 +374,12 @@ export default defineComponent({
       localData,
       localLoading,
       isSticky,
+      isPolling,
       paginationClass,
       customTableProps,
       hasMore,
       hasHeader,
+      request,
       setLoading,
       setPageLog,
       loadDataByManual,

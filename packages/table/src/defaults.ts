@@ -11,7 +11,17 @@ export type FormatMaps = {
   [key: string]: keyof SoruceData
 }
 
+export type Fn = (...args: any[]) => void
+
 export type Source = (...args: any[]) => Promise<any>
+
+export interface PollingOptions {
+  time: number
+  immediate: boolean
+  onChange?: Fn
+  onSuccess?: Fn
+  onFail?: Fn
+}
 
 export interface CustomHeader {
   label: string
@@ -25,6 +35,11 @@ export interface LocalHeader extends Omit<CustomHeader, 'isVisible'> {
   isVisible: boolean
 }
 
+export interface AdvTableContext {
+  refresh: () => Promise<void>
+  localLoading: boolean
+}
+
 export const advProps = {
   ...tableProps,
   ...paginationProps,
@@ -35,6 +50,19 @@ export const advProps = {
   hasRefreshBtn: {
     type: Boolean,
     default: false,
+  },
+  hasPollingBtn: {
+    type: Boolean,
+    default: false,
+  },
+  pollingOptions: {
+    type: Object as PropType<PollingOptions>,
+    default: () => {
+      return {
+        time: 3000,
+        immediate: false,
+      }
+    },
   },
   hasPage: {
     type: Boolean,

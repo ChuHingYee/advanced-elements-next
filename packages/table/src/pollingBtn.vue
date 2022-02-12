@@ -1,0 +1,98 @@
+<template>
+  <el-button type="primary" :size="elementSize" @click="handlePolling">
+    <el-icon
+      :size="elementSize !== 'large' ? 14 : 16"
+      :class="[isPolling ? 'is-loading' : '', 'polling-icon']"
+    >
+      <icon-refresh-right v-if="isPolling"></icon-refresh-right>
+      <icon-refresh v-else></icon-refresh> </el-icon
+    >开始轮询
+  </el-button>
+</template>
+
+<script lang="ts" setup>
+import type { PropType } from 'vue'
+import { inject, onBeforeUnmount } from 'vue'
+import { ElIcon, ElButton, useSize } from 'element-plus'
+import 'element-plus/es/components/icon/style/css'
+import 'element-plus/es/components/button/style/css'
+import {
+  RefreshRight as IconRefreshRight,
+  Refresh as IconRefresh,
+} from '@element-plus/icons-vue'
+import { useVModel } from '@vueuse/core'
+import type { AdvTableContext, PollingOptions } from './defaults'
+const props = defineProps({
+  options: {
+    type: Object as PropType<PollingOptions>,
+    default: () => {
+      return {
+        time: 3000,
+      }
+    },
+  },
+  isPolling: {
+    type: Boolean,
+    default: false,
+  },
+})
+const emits = defineEmits(['update:isPolling'])
+const isPolling = useVModel(props, 'isPolling', emits)
+const elementSize = useSize()
+const advTable = inject('advTable', {} as AdvTableContext)
+let timer
+const handlePolling = async () => {
+  if (isPolling.value) {
+    pause()
+  } else {
+    handleIsPollingChange(true)
+    if (props.options.immediate) {
+      await handleFetch()
+    }
+    resume()
+  }
+}
+const resume = () => {
+  timer = setTimeout(async () => {
+    if (isPolling.value) {
+      await handleFetch()
+      resume()
+    }
+  }, props.options.time)
+}
+const pause = () => {
+  timer && clearTimeout(timer)
+  handleIsPollingChange(false)
+}
+
+const handleFetch = () => {
+  return new Promise((resolve) => {
+    advTable
+      .refresh()
+      .then(() => {
+        props.options.onSuccess && props.options.onSuccess()
+      })
+      .catch((e) => {
+        props.options.onFail && props.options.onFail(e)
+      })
+      .finally(() => {
+        resolve(true)
+      })
+  })
+}
+
+const handleIsPollingChange = (val: boolean) => {
+  isPolling.value = val
+  props.options.onChange && props.options.onChange()
+}
+
+onBeforeUnmount(() => {
+  timer && clearTimeout(timer)
+})
+</script>
+
+<style lang="scss" scopde>
+.polling-icon {
+  margin-right: 6px;
+}
+</style>
