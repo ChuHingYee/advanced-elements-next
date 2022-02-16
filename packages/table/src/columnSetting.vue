@@ -1,11 +1,13 @@
 <template>
   <el-popover placement="bottom" trigger="click">
     <template #reference>
-      <el-tooltip content="表头选择" effect="light">
-        <el-icon :size="18" class="right-icon">
-          <icon-setting></icon-setting>
-        </el-icon>
-      </el-tooltip>
+      <div>
+        <el-tooltip content="表头选择" effect="light">
+          <el-icon :size="18" class="right-icon">
+            <icon-setting></icon-setting>
+          </el-icon>
+        </el-tooltip>
+      </div>
     </template>
     <div class="advcard">
       <div class="advcard-header">
@@ -98,7 +100,10 @@ const originHeadersMap: HeadersMap = {}
 const originHeadersFormatMap: HeadersFormatMap = {}
 
 const localHeaders = useVModel(props, 'headers', emits)
-function handleHeaderChange(val: boolean | 'none', row?: LocalHeader | 'all') {
+const handleHeaderChange = (
+  val: boolean | 'none',
+  row?: LocalHeader | 'all'
+) => {
   let _count = 0
   if (val === 'none') {
     localHeaders.value = originHeaders.map((key) => {
@@ -134,7 +139,7 @@ function handleHeaderChange(val: boolean | 'none', row?: LocalHeader | 'all') {
     }
   })
 }
-function handleChangeSort(index: number, type: 0 | 1) {
+const handleChangeSort = (index: number, type: 0 | 1) => {
   if (type === 0) {
     if (index === 0) {
       localHeaders.value = changeHeadersSort(
@@ -161,11 +166,11 @@ function handleChangeSort(index: number, type: 0 | 1) {
     }
   }
 }
-function changeHeadersSort(
+const changeHeadersSort = (
   index1: number,
   index2: number,
   array: LocalHeader[]
-) {
+) => {
   const temp = array[index1]
   array[index1] = array[index2]
   array[index2] = temp
