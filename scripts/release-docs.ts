@@ -16,7 +16,7 @@ const commit = () => {
     stdio: 'inherit',
     cwd: filesPath,
   })
-  exec('git add -D', {
+  exec('git add -A', {
     stdio: 'inherit',
     cwd: filesPath,
   })
