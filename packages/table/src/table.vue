@@ -30,11 +30,11 @@
       </div>
     </div>
     <el-table v-bind="customTableProps" ref="table" class="advtable-main">
-      <template v-for="header in localHeader" :key="header.prop">
+      <template v-for="header in localHeader">
         <el-table-column
           v-if="header.isVisible"
-          :key="header.prop"
           v-bind="header"
+          :key="header.prop"
         >
           <template #default="{ row }">
             {{ header.format ? header.format(row) : row[header.prop] }}
