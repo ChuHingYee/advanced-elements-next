@@ -1,16 +1,13 @@
 {
+  "extends": "@vue/tsconfig/tsconfig.web.json",
   "compilerOptions": {
-    "target": "esnext",
-    "useDefineForClassFields": true,
-    "module": "esnext",
-    "moduleResolution": "node",
-    "strict": true,
-    "jsx": "preserve",
-    "sourceMap": true,
-    "resolveJsonModule": true,
-    "esModuleInterop": true,
-    "lib": ["esnext", "dom"],
-    "types": ["element-plus/global"]
+    "baseUrl": ".",
+    "types": ["vite/client", "element-plus/global", "unplugin-icons/types/vue"],
+    "paths": {
+      "@/*": ["src/*"]
+    },
+    "skipLibCheck": true
   },
-  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue"]
+  "include": ["src"],
+  "references": [{ "path": "./tsconfig.vite-config.json" }]
 }
