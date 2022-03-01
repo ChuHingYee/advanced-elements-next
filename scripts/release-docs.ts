@@ -1,41 +1,35 @@
 import chalk from 'chalk'
 import { join } from 'path'
-import execa from 'execa'
-import { docsRoot } from '../build/paths'
+import { execSync as exec } from 'child_process'
+import { docsRoot } from '../shared/paths'
 const filesPath = join(docsRoot, '.vitepress', 'dist')
 const { log } = console
 
-const buildFile = async () => {
-  log(chalk`{blue Building Files}`)
-  await execa('pnpm', ['docs:build'])
+const buildFile = () => {
+  log(chalk`{bgCyan Building Files}`)
+  exec('pnpm docs:build')
 }
 
-const commit = async () => {
-  log(chalk`{blue Commit}`)
-  await execa('git', ['init'], {
+const commit = () => {
+  log(chalk`{bgCyan Committing}`)
+  exec('git init', {
     stdio: 'inherit',
     cwd: filesPath,
   })
-  await execa('git', ['add', '-A'], {
+  exec('git add -D', {
     stdio: 'inherit',
     cwd: filesPath,
   })
-  await execa('git', ['commit', '-m', 'deploy'], {
+  exec('git commit -m deploy', {
     stdio: 'inherit',
     cwd: filesPath,
   })
 }
 
 const publish = async () => {
-  log(chalk`{blue Publish Changes}`)
-  await execa(
-    'git',
-    [
-      'push',
-      '-f',
-      'git@github.com:ChuHingYee/advanced-elements-next.git',
-      'master:gh-pages',
-    ],
+  log(chalk`{bgCyan Publish Changes}`)
+  exec(
+    'git push -f git@github.com:ChuHingYee/advanced-elements-next.git master:gh-pages',
     {
       stdio: 'inherit',
       cwd: filesPath,
@@ -43,12 +37,12 @@ const publish = async () => {
   )
 }
 
-;(async () => {
+;(() => {
   try {
-    log(chalk`{cyan Releasing Docs\n}`)
-    await buildFile()
-    await commit()
-    await publish()
+    log(chalk`{bgYellow Releasing Docs\n}`)
+    buildFile()
+    commit()
+    publish()
   } catch (e) {
     log(e)
     process.exit(1)
