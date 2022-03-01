@@ -122,20 +122,18 @@ export default defineComponent({
           resolve({
             data: [
               {
-                id: '1',
-                name: 1,
+                name: (Math.random() * 10).toFixed(3),
+                id: Date.now(),
               },
               {
-                id: '2',
-                name: 2,
+                name: (Math.random() * 10).toFixed(3),
+                id: Date.now(),
               },
               {
-                id: '1',
-                name: 1,
+                name: (Math.random() * 10).toFixed(3),
+                id: Date.now(),
               },
             ],
-            size: 2,
-            totalPage: 2,
             total: 3,
           })
         }, 500)
@@ -157,7 +155,7 @@ export default defineComponent({
 <template>
   <adv-table :source="request" ref="table" :auto="false">
     <el-table-column prop="name" label="姓名" width="180"> </el-table-column>
-    <el-table-column prop="address" label="地址"> </el-table-column>
+    <el-table-column prop="id" label="id证明"> </el-table-column>
     <template #footer>
       <el-button @click="refresh">获取数据</el-button>
     </template>
@@ -177,20 +175,18 @@ export default defineComponent({
           resolve({
             data: [
               {
-                id: '1',
-                name: 1,
+                name: (Math.random() * 10).toFixed(3),
+                id: Date.now(),
               },
               {
-                id: '2',
-                name: 2,
+                name: (Math.random() * 10).toFixed(3),
+                id: Date.now(),
               },
               {
-                id: '1',
-                name: 1,
+                name: (Math.random() * 10).toFixed(3),
+                id: Date.now(),
               },
             ],
-            size: 2,
-            totalPage: 2,
             total: 3,
           })
         }, 500)
@@ -215,7 +211,7 @@ export default defineComponent({
 <template>
   <adv-table :source="request" :isManual="true">
     <el-table-column prop="name" label="姓名" width="180"> </el-table-column>
-    <el-table-column prop="address" label="地址"> </el-table-column>
+    <el-table-column prop="id" label="id证明"> </el-table-column>
   </adv-table>
 </template>
 
@@ -232,20 +228,18 @@ export default defineComponent({
           resolve({
             data: [
               {
-                id: '1',
-                name: 1,
+                name: (Math.random() * 10).toFixed(3),
+                id: Date.now(),
               },
               {
-                id: '2',
-                name: 2,
+                name: (Math.random() * 10).toFixed(3),
+                id: Date.now(),
               },
               {
-                id: '1',
-                name: 1,
+                name: (Math.random() * 10).toFixed(3),
+                id: Date.now(),
               },
             ],
-            size: 2,
-            totalPage: 2,
             total: 3,
           })
         }, 500)
@@ -258,3 +252,70 @@ export default defineComponent({
 ```
 
 :::
+
+### 用于轮询更新数据
+
+:::demo
+
+```vue
+<template>
+  <adv-table :source="request" :has-polling-btn="true" :has-refresh-btn="true">
+    <el-table-column prop="name" label="姓名" width="180"> </el-table-column>
+    <el-table-column prop="id" label="id证明"> </el-table-column>
+  </adv-table>
+</template>
+
+<script>
+import { ref, defineComponent } from 'vue'
+
+export default defineComponent({
+  name: 'Demo5',
+  setup() {
+    const table = ref()
+    const request = function () {
+      return new Promise((resolve) => {
+        setTimeout(() => {
+          resolve({
+            data: [
+              {
+                name: (Math.random() * 10).toFixed(3),
+                id: Date.now(),
+              },
+              {
+                name: (Math.random() * 10).toFixed(3),
+                id: Date.now(),
+              },
+              {
+                name: (Math.random() * 10).toFixed(3),
+                id: Date.now(),
+              },
+            ],
+            total: 3,
+          })
+        }, 500)
+      })
+    }
+    return { request }
+  },
+})
+</script>
+```
+
+:::
+
+## 其他
+
+### 关于样式
+
+如果项目是自动导入 element-plus，需要手动引入相关样式
+
+```javascript
+import 'element-plus/es/components/icon/style/css'
+import 'element-plus/es/components/button/style/css'
+import 'element-plus/es/components/popover/style/css'
+import 'element-plus/es/components/checkbox/style/css'
+import 'element-plus/es/components/tooltip/style/css'
+import 'element-plus/es/components/table/style/css'
+import 'element-plus/es/components/pagination/style/css'
+import 'element-plus/es/components/loading/style/css'
+```
