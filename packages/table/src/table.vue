@@ -36,9 +36,9 @@
           :key="header.prop"
           v-bind="header"
         >
-          <template #default="{ row }">
-            {{ header.format ? header.format(row) : row[header.prop] }}
-          </template>
+          <template #default="{ row }">{{
+            header.format ? header.format(row) : row[header.prop]
+          }}</template>
         </el-table-column>
       </template>
       <slot></slot>
@@ -192,7 +192,7 @@ export default defineComponent({
       return (
         slots['header-left'] ||
         slots['header-right'] ||
-        props.hasColumnSetting ||
+        (props.hasColumnSetting && props.headers.length > 0) ||
         props.hasRefreshBtn ||
         props.hasPollingBtn
       )
