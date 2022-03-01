@@ -1,5 +1,21 @@
 # @advanced-elements/table ChangeLog
 
+## 2.0.6
+
+### Patch Changes
+
+#### Features
+
+- feat: add column setting (0b4ab7c)
+- feat: add refresh btn (77ebab4)
+- feat: add polling btn (81035cb)
+- feat: add tips about header (9200e45)
+
+#### Bugfixes
+
+- fix: fix el-table-column duplicate key (c4fd391)
+- fix: remove import element-plus css in components (9ab0dcd)
+
 ## v2.0.5
 
 _2022-02-03_
