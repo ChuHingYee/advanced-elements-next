@@ -15,8 +15,6 @@
 import type { PropType } from 'vue'
 import { inject, computed, onBeforeUnmount } from 'vue'
 import { ElIcon, ElButton, useSize } from 'element-plus'
-import 'element-plus/es/components/icon/style/css'
-import 'element-plus/es/components/button/style/css'
 import {
   RefreshRight as IconRefreshRight,
   Refresh as IconRefresh,

@@ -68,11 +68,6 @@ import {
   ElTooltip,
   ElCheckbox,
 } from 'element-plus'
-import 'element-plus/es/components/icon/style/css'
-import 'element-plus/es/components/button/style/css'
-import 'element-plus/es/components/popover/style/css'
-import 'element-plus/es/components/checkbox/style/css'
-import 'element-plus/es/components/tooltip/style/css'
 import {
   Setting as IconSetting,
   CaretTop as IconCaretTop,
