@@ -2,7 +2,9 @@
   "$schema": "https://unpkg.com/@changesets/config@1.7.0/schema.json",
   "changelog": [
     "@changesets/changelog-github",
-    { "repo": "ChuHingYee/advanced-elements-next" }
+    {
+      "repo": "ChuHingYee/advanced-elements-next"
+    }
   ],
   "commit": false,
   "fixed": [],
@@ -10,7 +12,9 @@
   "access": "public",
   "baseBranch": "master",
   "updateInternalDependencies": "patch",
-  "ignore": [],
+  "ignore": [
+    "play"
+  ],
   "___experimentalUnsafeOptions_WILL_CHANGE_IN_PATCH": {
     "updateInternalDependents": "always"
   }
