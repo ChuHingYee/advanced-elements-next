@@ -1,6 +1,6 @@
 import type { PropType } from 'vue'
 import tableProps from 'element-plus/lib/components/table/src/table/defaults'
-import { paginationProps } from 'element-plus'
+import { paginationProps, configProviderProps } from 'element-plus'
 
 export type SoruceData = {
   data: any[]
@@ -45,6 +45,7 @@ export interface AdvTableContext {
 export const advProps = {
   ...tableProps,
   ...paginationProps,
+  ...configProviderProps,
   hasColumnSetting: {
     type: Boolean,
     default: true,
