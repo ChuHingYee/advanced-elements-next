@@ -1,5 +1,13 @@
 # @advanced-elements/table ChangeLog
 
+## 2.0.7
+
+### Patch Changes
+
+#### Bugfixes
+
+- fix: fix global config useless (ed057ba)
+
 ## 2.0.6
 
 ### Patch Changes
