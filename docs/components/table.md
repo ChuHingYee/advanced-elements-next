@@ -319,3 +319,22 @@ import 'element-plus/es/components/table/style/css'
 import 'element-plus/es/components/pagination/style/css'
 import 'element-plus/es/components/loading/style/css'
 ```
+
+### 全局设置
+
+暂时需要手动传值
+
+```vue
+<script lang="ts" setup>
+import { useGlobalConfig } from 'element-plus'
+import { AdvTable } from '@advanced-elements/table'
+const locale = useGlobalConfig('locale')
+const zIndex = useGlobalConfig('zIndex')
+const button = useGlobalConfig('button')
+const size = useGlobalConfig('size')
+</script>
+
+<template>
+  <adv-table :locale="locale" :z-index="zIndex" :button="button" :size="size"></adv-table>
+</template>
+```
