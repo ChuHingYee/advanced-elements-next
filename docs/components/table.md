@@ -322,7 +322,7 @@ import 'element-plus/es/components/loading/style/css'
 
 ### 全局设置
 
-暂时需要手动传值
+如果element-plus版本与组件一致时，不需作任何处理，否则需要手动传值。(建议保持一样版本)
 
 ```vue
 <script lang="ts" setup>
