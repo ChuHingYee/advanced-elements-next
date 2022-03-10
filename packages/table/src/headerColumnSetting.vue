@@ -1,29 +1,29 @@
 <template>
-  <el-popover placement="bottom" trigger="click">
+  <ElPopover placement="bottom" trigger="click">
     <template #reference>
       <div>
-        <el-tooltip content="表头选择" effect="light">
-          <el-icon :size="18" class="right-icon">
-            <icon-setting></icon-setting>
-          </el-icon>
-        </el-tooltip>
+        <ElTooltip content="表头选择" effect="light">
+          <ElIcon :size="18" class="right-icon">
+            <IconSetting></IconSetting>
+          </ElIcon>
+        </ElTooltip>
       </div>
     </template>
     <div class="advcard">
       <div class="advcard-header">
-        <el-checkbox
+        <ElCheckbox
           v-model="isChooseAll"
           :indeterminate="isIndeterminate"
           size="large"
           @change="handleHeaderChange($event, 'all')"
-          >列展示</el-checkbox
+          >列展示</ElCheckbox
         >
-        <el-button
+        <ElButton
           size="large"
           type="text"
           class="advcard-header__reset"
           @click="handleHeaderChange('none')"
-          >重置</el-button
+          >重置</ElButton
         >
       </div>
       <div class="advcard-body">
@@ -32,30 +32,30 @@
           :key="header.prop"
           class="advcard-body__check"
         >
-          <el-checkbox
+          <ElCheckbox
             :model-value="header.isVisible"
             size="large"
             @change="handleHeaderChange($event, header)"
-            >{{ header.label }}</el-checkbox
+            >{{ header.label }}</ElCheckbox
           >
           <div class="check-btns">
-            <el-icon
+            <ElIcon
               class="check-btns__icon"
               @click="handleChangeSort(index, 0)"
             >
-              <icon-caret-top></icon-caret-top>
-            </el-icon>
-            <el-icon
+              <IconCaretTop></IconCaretTop>
+            </ElIcon>
+            <ElIcon
               class="check-btns__icon"
               @click="handleChangeSort(index, 1)"
             >
-              <icon-caret-bottom></icon-caret-bottom>
-            </el-icon>
+              <IconCaretBottom></IconCaretBottom>
+            </ElIcon>
           </div>
         </div>
       </div>
     </div>
-  </el-popover>
+  </ElPopover>
 </template>
 
 <script lang="ts" setup>

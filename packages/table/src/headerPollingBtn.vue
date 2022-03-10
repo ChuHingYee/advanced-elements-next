@@ -1,14 +1,14 @@
 <template>
-  <el-button type="primary" :size="elementSize" @click="handlePolling">
-    <el-icon
+  <ElButton type="primary" :size="elementSize" @click="handlePolling">
+    <ElIcon
       :size="elementSize !== 'large' ? 14 : 16"
       :class="[isPolling ? 'is-loading' : '', 'polling-icon']"
     >
-      <icon-refresh-right v-if="isPolling"></icon-refresh-right>
-      <icon-refresh v-else></icon-refresh>
-    </el-icon>
+      <IconRefreshRight v-if="isPolling"></IconRefreshRight>
+      <IconRefresh v-else></IconRefresh>
+    </ElIcon>
     {{ isPolling ? stopTip : startTip }}
-  </el-button>
+  </ElButton>
 </template>
 
 <script lang="ts" setup>

@@ -1,5 +1,5 @@
 <template>
-  <el-config-provider
+  <ElConfigProvider
     :locale="elementLocale"
     :size="elementSize"
     :button="elementButton"
@@ -12,45 +12,45 @@
         </div>
         <div class="advtable-header__right">
           <slot name="header-right"></slot>
-          <polling-btn
+          <HeaderPollingBtn
             v-if="hasPollingBtn && hasSource && !isManual"
             v-model:isPolling="isPolling"
             :options="pollingOptions"
-          ></polling-btn>
+          ></HeaderPollingBtn>
 
-          <el-tooltip content="刷新" effect="light">
-            <el-icon
+          <ElTooltip content="刷新" effect="light">
+            <ElIcon
               v-if="hasRefreshBtn"
               :size="18"
               class="right-icon"
               @click="refresh(false)"
             >
-              <icon-refresh-right></icon-refresh-right>
-            </el-icon>
-          </el-tooltip>
+              <IconRefreshRight></IconRefreshRight>
+            </ElIcon>
+          </ElTooltip>
 
-          <column-setting
+          <HeaderColumnSetting
             v-if="headers.length > 0 && hasColumnSetting"
             v-model:headers="localHeader"
-          ></column-setting>
+          ></HeaderColumnSetting>
         </div>
       </div>
-      <el-table v-bind="customTableProps" ref="table" class="advtable-main">
+      <ElTable v-bind="customTableProps" ref="table" class="advtable-main">
         <template v-for="header in localHeader">
           <template v-if="header.isVisible">
             <slot
               v-if="slots[header.prop]"
-              :key="header.prop"
+              :key="header.prop + 'slot'"
               :name="header.prop"
             ></slot>
-            <el-table-column v-else v-bind="header" :key="header.prop">
+            <ElTableColumn v-else v-bind="header" :key="header.prop">
               <template #default="{ row }">
                 {{ header.format ? header.format(row) : row[header.prop] }}
               </template>
-            </el-table-column>
+            </ElTableColumn>
           </template>
         </template>
-      </el-table>
+      </ElTable>
       <div
         v-if="hasPage"
         ref="page"
@@ -58,17 +58,17 @@
         :class="paginationClass"
       >
         <template v-if="isManual">
-          <el-button
+          <ElButton
             v-if="hasMore"
             :loading="localLoading"
             @click="loadDataByManual"
-            >加载更多</el-button
+            >加载更多</ElButton
           >
           <span v-else-if="!hasMore && !localLoading">没有更多了</span>
         </template>
         <template v-else>
           <slot name="footer"></slot>
-          <el-pagination
+          <ElPagination
             ref="pagination"
             v-model:currentPage="localCurrentPage"
             :small="elementSize === 'small'"
@@ -82,12 +82,18 @@
         </template>
       </div>
     </div>
-  </el-config-provider>
+  </ElConfigProvider>
 </template>
 
 <script lang="ts">
+export default {
+  name: 'AdvTable',
+  inheritAttrs: false,
+}
+</script>
+
+<script lang="ts" setup>
 import {
-  defineComponent,
   ref,
   computed,
   watch,
@@ -106,321 +112,271 @@ import {
   ElIcon,
   ElTooltip,
   ElConfigProvider,
+  useGlobalConfig,
 } from 'element-plus'
 import { RefreshRight as IconRefreshRight } from '@element-plus/icons-vue'
-import ColumnSetting from './columnSetting.vue'
-import PollingBtn from './pollingBtn.vue'
+import HeaderColumnSetting from './headerColumnSetting.vue'
+import HeaderPollingBtn from './headerPollingBtn.vue'
 import tableProps from 'element-plus/lib/components/table/src/table/defaults'
 import { advProps } from './defaults'
 import { formatData } from './utils'
 import type { LocalHeader } from './defaults'
 import type { LoadingInstance } from 'element-plus/lib/components/loading/src/loading'
-import type { TableProps } from 'element-plus/lib/components/table/src/table/defaults'
 import type { Router, RouteLocationNormalizedLoaded } from 'vue-router'
 type TablePropsKeys = keyof typeof tableProps
 
-export default defineComponent({
-  name: 'AdvTable',
-  components: {
-    ElTable,
-    ElTableColumn,
-    ElPagination,
-    ElButton,
-    ElIcon,
-    ElTooltip,
-    ElConfigProvider,
-    IconRefreshRight,
-    ColumnSetting,
-    PollingBtn,
-  },
-  inheritAttrs: false,
-  props: advProps,
-  setup(props, ctx) {
-    let loadingInstance: LoadingInstance
-    const slots = useSlots()
-    const isInit = ref(false)
-    const table = ref()
-    const instance = getCurrentInstance()!
-    const router = instance.appContext.config.globalProperties.$router as Router
-    const route = instance.appContext.config.globalProperties
-      .$route as RouteLocationNormalizedLoaded
-    const pagination = ref()
-    const defaultTableConfig = ref({
-      stripe: true,
-      border: true,
+const props = defineProps(advProps)
+const emit = defineEmits<{
+  (e: 'change-page', page: number, size: number): void
+}>()
+let loadingInstance: LoadingInstance
+const slots = useSlots()
+const isInit = ref(false)
+const table = ref()
+const instance = getCurrentInstance()!
+const router = instance.appContext.config.globalProperties.$router as Router
+const route = instance.appContext.config.globalProperties
+  .$route as RouteLocationNormalizedLoaded
+const pagination = ref()
+const defaultTableConfig = ref({
+  stripe: true,
+  border: true,
+})
+const localCurrentPage = ref(1)
+const localPageLayout = ref('total, sizes, prev, pager, next, jumper')
+const localPageSize = ref(10)
+const localPageSizes = ref([10, 20, 30])
+const localTotal = ref(1)
+const localData = ref<any[]>([])
+const localLoading = ref(false)
+const isSticky = ref(false)
+const localHeader = ref<LocalHeader[]>([])
+const isPolling = ref(false)
+const paginationClass = computed(() => {
+  const _sticky = isSticky.value ? 'advtable-page__sticky' : ''
+  const _manual = props.isManual ? 'advtable-page__manual' : ''
+  return `${_sticky} ${_manual}`
+})
+const customTableProps = computed(() => {
+  const _props = {
+    ...defaultTableConfig.value,
+    data: hasSource.value ? localData.value : props.data,
+  }
+  const tablePropsKeys = Object.keys(tableProps)
+  Object.keys(props).forEach((k) => {
+    const tableKey = tablePropsKeys.find((key) => {
+      return key === k
     })
-    const localCurrentPage = ref(1)
-    const localPageLayout = ref('total, sizes, prev, pager, next, jumper')
-    const localPageSize = ref(10)
-    const localPageSizes = ref([10, 20, 30])
-    const localTotal = ref(1)
-    const localData = ref<any[]>([])
-    const localLoading = ref(false)
-    const isSticky = ref(false)
-    const localHeader = ref<LocalHeader[]>([])
-    const isPolling = ref(false)
-    const paginationClass = computed(() => {
-      const _sticky = isSticky.value ? 'advtable-page__sticky' : ''
-      const _manual = props.isManual ? 'advtable-page__manual' : ''
-      return `${_sticky} ${_manual}`
-    })
-    const customTableProps = computed<TableProps<any>>(() => {
-      const _props = {
-        ...defaultTableConfig.value,
-        data: hasSource.value ? localData.value : props.data,
-      }
-      const tablePropsKeys = Object.keys(tableProps)
-      Object.keys(props).forEach((k) => {
-        const tableKey = tablePropsKeys.find((key) => {
-          return key === k
-        })
-        if (tableKey && tableKey !== 'data') {
-          _props[tableKey as TablePropsKeys] = props[tableKey as TablePropsKeys]
-        }
-      })
-      return _props as TableProps<any>
-    })
-    const hasSource = computed(() => {
-      return !!props.source
-    })
-    const pageSizes = computed(() => {
-      return props.pageSizes || localPageSizes.value
-    })
-    const hasMore = computed(() => {
-      const current = localPageSize.value * localCurrentPage.value
-      return current < localTotal.value && localCurrentPage.value !== 0
-    })
-    const elementSize = computed(() => {
-      return props.size
-    })
-    const elementLocale = computed(() => {
-      return props.locale
-    })
-    const elementZIndex = computed(() => {
-      return props.zIndex
-    })
-    const elementButton = computed(() => {
-      return props.button
-    })
-    const hasHeader = computed(() => {
-      return (
-        slots['header-left'] ||
-        slots['header-right'] ||
-        (props.hasColumnSetting && props.headers.length > 0) ||
-        props.hasRefreshBtn ||
-        props.hasPollingBtn
-      )
-    })
-    watch(
-      () => {
-        return props.clientHeight
-      },
-      () => {
-        checkIsSticky()
-      },
-      {
-        immediate: true,
-      }
-    )
-    const request = function (): Promise<any[]> {
-      return new Promise((resolve) => {
-        if (props.source) {
-          setLoading(true)
-          const querys = {
-            page: localCurrentPage.value,
-            size: localPageSize.value,
-          }
-          props
-            .source(querys)
-            .then((res) => {
-              const formatResponse = formatData(res, props.formatMaps)
-              localTotal.value = formatResponse.total
-              if (props.isManual) {
-                localData.value = localData.value.concat(formatResponse.data)
-              } else {
-                localData.value = formatResponse.data
-              }
-              resolve(localData.value)
-            })
-            .finally(() => {
-              setLoading(false)
-            })
-        } else {
-          resolve([])
-        }
-      })
+    if (tableKey && tableKey !== 'data') {
+      _props[tableKey as TablePropsKeys] = props[tableKey as TablePropsKeys]
     }
-    const loadDataByManual = function () {
-      if (hasMore.value) {
-        localCurrentPage.value = localCurrentPage.value + 1
-        handleCurrentPageChange(localCurrentPage.value)
-      }
-    }
-    function handleCurrentPageChange(val: number) {
-      if (props.isRecord && !props.isManual) {
-        setPageLog(val, localPageSize.value)
-      }
-      if (props.hasPollingBtn) {
-        // 停止轮询
-        isPolling.value = false
-      }
-      request()
-      ctx.emit('change-page', {
-        page: val,
+  })
+  return _props
+})
+const hasSource = computed(() => {
+  return !!props.source
+})
+const pageSizes = computed(() => {
+  return props.pageSizes || localPageSizes.value
+})
+const hasMore = computed(() => {
+  const current = localPageSize.value * localCurrentPage.value
+  return current < localTotal.value && localCurrentPage.value !== 0
+})
+const elementSize = computed(() => {
+  return props.size || useGlobalConfig('size').value
+})
+const elementLocale = computed(() => {
+  return props.locale || useGlobalConfig('locale').value
+})
+const elementZIndex = computed(() => {
+  return props.zIndex || useGlobalConfig('zIndex').value
+})
+const elementButton = computed(() => {
+  return props.button || useGlobalConfig('button').value
+})
+const hasHeader = computed(() => {
+  return (
+    slots['header-left'] ||
+    slots['header-right'] ||
+    (props.hasColumnSetting && props.headers.length > 0) ||
+    props.hasRefreshBtn ||
+    props.hasPollingBtn
+  )
+})
+
+const request = function (): Promise<any[]> {
+  return new Promise((resolve) => {
+    if (props.source) {
+      setLoading(true)
+      const querys = {
+        page: localCurrentPage.value,
         size: localPageSize.value,
-      })
+      }
+      props
+        .source(querys)
+        .then((res) => {
+          const formatResponse = formatData(res, props.formatMaps)
+          localTotal.value = formatResponse.total
+          if (props.isManual) {
+            localData.value = localData.value.concat(formatResponse.data)
+          } else {
+            localData.value = formatResponse.data
+          }
+          resolve(localData.value)
+        })
+        .finally(() => {
+          setLoading(false)
+        })
+    } else {
+      resolve([])
     }
-    function handlePageSizeChange(val: number) {
-      localPageSize.value = val
+  })
+}
+const loadDataByManual = function () {
+  if (hasMore.value) {
+    localCurrentPage.value = localCurrentPage.value + 1
+    handleCurrentPageChange(localCurrentPage.value)
+  }
+}
+const handleCurrentPageChange = (val: number) => {
+  if (props.isRecord && !props.isManual) {
+    setPageLog(val, localPageSize.value)
+  }
+  if (props.hasPollingBtn) {
+    // 停止轮询
+    isPolling.value = false
+  }
+  request()
+  emit('change-page', val, localPageSize.value)
+}
+const handlePageSizeChange = (val: number) => {
+  localPageSize.value = val
+  localCurrentPage.value = 1
+  if (props.isRecord && !props.isManual) {
+    setPageLog(1, localPageSize.value)
+  }
+  if (props.hasPollingBtn) {
+    // 停止轮询
+    isPolling.value = false
+  }
+  request()
+  emit('change-page', 1, val)
+}
+const setLoading = (flag: boolean) => {
+  localLoading.value = flag
+  if (isPolling.value) {
+    loadingInstance && loadingInstance.close()
+    return
+  }
+  if (flag) {
+    loadingInstance = ElLoading.service({
+      target: table.value.$el,
+      fullscreen: false,
+    })
+  } else {
+    loadingInstance.close()
+  }
+}
+const setPageLog = (page: number, count: number) => {
+  if (router) {
+    const { path, query } = route
+    router.replace({
+      path,
+      query: {
+        ...query,
+        p: page,
+        s: count,
+      },
+    })
+  }
+}
+const refresh = (flag: boolean) => {
+  return new Promise((resolve, reject) => {
+    if (localLoading.value || !hasSource.value) {
+      resolve(true)
+    }
+    if (flag || props.isManual) {
       localCurrentPage.value = 1
       if (props.isRecord && !props.isManual) {
         setPageLog(1, localPageSize.value)
       }
-      if (props.hasPollingBtn) {
-        // 停止轮询
-        isPolling.value = false
-      }
-      request()
-      ctx.emit('change-page', {
-        page: 1,
-        size: val,
-      })
-    }
-    function setLoading(flag: boolean) {
-      localLoading.value = flag
-      if (isPolling.value) {
-        loadingInstance && loadingInstance.close()
-        return
-      }
-      if (flag) {
-        loadingInstance = ElLoading.service({
-          target: table.value.$el,
-          fullscreen: false,
-        })
-      } else {
-        loadingInstance.close()
-      }
-    }
-    function setPageLog(page: number, count: number) {
-      if (router) {
-        const { path, query } = route
-        router.replace({
-          path,
-          query: {
-            ...query,
-            p: page,
-            s: count,
-          },
-        })
-      }
-    }
-    function refresh(flag: boolean) {
-      return new Promise((resolve, reject) => {
-        if (localLoading.value || !hasSource.value) {
-          resolve(true)
-        }
-        if (flag || props.isManual) {
-          localCurrentPage.value = 1
-          if (props.isRecord && !props.isManual) {
-            setPageLog(1, localPageSize.value)
-          }
-        } else {
-          if (props.isRecord && route) {
-            const { p, s } = route.query
-            if (!p) {
-              localCurrentPage.value = 1
-            }
-            if (!s) {
-              localPageSize.value = 10
-            }
-          }
-        }
-        request()
-          .then(() => {
-            resolve(true)
-          })
-          .catch((e) => {
-            reject(e)
-          })
-      })
-    }
-    function checkIsSticky() {
-      nextTick(() => {
-        if (pagination.value && props.clientHeight && props.openSticky) {
-          const rect = pagination.value.$el.getBoundingClientRect()
-          if (rect.top > props.clientHeight - 45) {
-            isSticky.value = true
-          }
-        }
-      })
-    }
-    onMounted(() => {
-      if (props.headers && props.headers.length > 0) {
-        localHeader.value = props.headers.map((header) => {
-          return {
-            isVisible: true,
-            ...header,
-          }
-        })
-      }
-      if (props.pageSize) {
-        localPageSize.value = props.pageSize
-      }
-      if (props.isRecord && !props.isManual && route) {
+    } else {
+      if (props.isRecord && route) {
         const { p, s } = route.query
-        if (p) {
-          localCurrentPage.value = Number(p as string)
+        if (!p) {
+          localCurrentPage.value = 1
         }
-        if (s) {
-          localPageSize.value = Number(s as string)
+        if (!s) {
+          localPageSize.value = 10
         }
       }
-      isInit.value = true
-      if (props.autoRequest) {
-        nextTick(() => {
-          request()
-        })
-      }
-    })
-    provide('advTable', {
-      refresh,
-      localLoading,
-    })
-    return {
-      slots,
-      isInit,
-      table,
-      pagination,
-      elementSize,
-      elementLocale,
-      elementZIndex,
-      elementButton,
-      hasSource,
-      defaultTableConfig,
-      localCurrentPage,
-      localPageLayout,
-      localTotal,
-      localPageSize,
-      localHeader,
-      pageSizes,
-      localData,
-      localLoading,
-      isSticky,
-      isPolling,
-      paginationClass,
-      customTableProps,
-      hasMore,
-      hasHeader,
-      request,
-      setLoading,
-      setPageLog,
-      loadDataByManual,
-      handleCurrentPageChange,
-      handlePageSizeChange,
-      refresh,
-      checkIsSticky,
     }
+    request()
+      .then(() => {
+        resolve(true)
+      })
+      .catch((e) => {
+        reject(e)
+      })
+  })
+}
+const checkIsSticky = () => {
+  nextTick(() => {
+    if (pagination.value && props.clientHeight && props.openSticky) {
+      const rect = pagination.value.$el.getBoundingClientRect()
+      if (rect.top > props.clientHeight - 45) {
+        isSticky.value = true
+      }
+    }
+  })
+}
+watch(
+  () => {
+    return props.clientHeight
   },
+  () => {
+    checkIsSticky()
+  },
+  {
+    immediate: true,
+  }
+)
+onMounted(() => {
+  if (props.headers && props.headers.length > 0) {
+    localHeader.value = props.headers.map((header) => {
+      return {
+        isVisible: true,
+        ...header,
+      }
+    })
+  }
+  if (props.pageSize) {
+    localPageSize.value = props.pageSize
+  }
+  if (props.isRecord && !props.isManual && route) {
+    const { p, s } = route.query
+    if (p) {
+      localCurrentPage.value = Number(p as string)
+    }
+    if (s) {
+      localPageSize.value = Number(s as string)
+    }
+  }
+  isInit.value = true
+  if (props.autoRequest) {
+    nextTick(() => {
+      request()
+    })
+  }
+})
+provide('advTable', {
+  refresh,
+  localLoading,
+})
+defineExpose({
+  refresh,
+  setLoading,
 })
 </script>
 
