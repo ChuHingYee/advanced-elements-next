@@ -37,17 +37,19 @@
       </div>
       <el-table v-bind="customTableProps" ref="table" class="advtable-main">
         <template v-for="header in localHeader">
-          <el-table-column
-            v-if="header.isVisible"
-            v-bind="header"
-            :key="header.prop"
-          >
-            <template #default="{ row }">{{
-              header.format ? header.format(row) : row[header.prop]
-            }}</template>
-          </el-table-column>
+          <template v-if="header.isVisible">
+            <slot
+              v-if="slots[header.prop]"
+              :key="header.prop"
+              :name="header.prop"
+            ></slot>
+            <el-table-column v-else v-bind="header" :key="header.prop">
+              <template #default="{ row }">
+                {{ header.format ? header.format(row) : row[header.prop] }}
+              </template>
+            </el-table-column>
+          </template>
         </template>
-        <slot></slot>
       </el-table>
       <div
         v-if="hasPage"
@@ -385,6 +387,7 @@ export default defineComponent({
       localLoading,
     })
     return {
+      slots,
       isInit,
       table,
       pagination,
