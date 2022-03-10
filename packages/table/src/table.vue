@@ -36,20 +36,23 @@
         </div>
       </div>
       <ElTable v-bind="customTableProps" ref="table" class="advtable-main">
-        <template v-for="header in localHeader">
-          <template v-if="header.isVisible">
-            <slot
-              v-if="slots[header.prop]"
-              :key="header.prop + 'slot'"
-              :name="header.prop"
-            ></slot>
-            <ElTableColumn v-else v-bind="header" :key="header.prop">
-              <template #default="{ row }">
-                {{ header.format ? header.format(row) : row[header.prop] }}
-              </template>
-            </ElTableColumn>
+        <template v-if="localHeader.length > 0">
+          <template v-for="header in localHeader">
+            <template v-if="header.isVisible">
+              <slot
+                v-if="slots[header.prop]"
+                :key="header.prop + 'slot'"
+                :name="header.prop"
+              ></slot>
+              <ElTableColumn v-else v-bind="header" :key="header.prop">
+                <template #default="{ row }">
+                  {{ header.format ? header.format(row) : row[header.prop] }}
+                </template>
+              </ElTableColumn>
+            </template>
           </template>
         </template>
+        <slot v-else></slot>
       </ElTable>
       <div
         v-if="hasPage"
