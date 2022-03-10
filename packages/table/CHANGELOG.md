@@ -1,5 +1,13 @@
 # @advanced-elements/table ChangeLog
 
+## 2.0.10
+
+### Patch Changes
+
+#### Bugfixes
+
+- fix: fix render error when without support headers (2370da4)
+
 ## 2.0.9
 
 ### Patch Changes
