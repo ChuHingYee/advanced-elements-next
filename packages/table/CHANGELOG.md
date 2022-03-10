@@ -1,5 +1,17 @@
 # @advanced-elements/table ChangeLog
 
+## 2.0.9
+
+### Patch Changes
+
+#### Features
+
+- feat: support slots when using headers prop (d689b39)
+
+#### Refactors
+
+- refactor: switch to script-setup syntax (4d377f2)
+
 ## 2.0.8
 
 ### Patch Changes
