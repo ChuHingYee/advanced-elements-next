@@ -1,5 +1,6 @@
 module.exports = {
   preset: 'ts-jest',
+  setupFiles: ['./jest.setup.js'],
   globals: {
     '@vue/vue3-jest': {
       compilerOptions: {

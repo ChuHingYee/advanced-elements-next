@@ -1,8 +1,34 @@
-import { shallowMount, enableAutoUnmount, mount } from '@vue/test-utils'
+import { mount } from '@vue/test-utils'
 import { nextTick } from 'vue'
 import AdvTable from '../src/table.vue'
-import { ElLoadingDirective } from 'element-plus'
+import {
+  ElTable,
+  ElTableColumn,
+  ElPagination,
+  ElButton,
+  ElLoading,
+  ElIcon,
+  ElTooltip,
+  ElConfigProvider,
+  useGlobalConfig,
+} from 'element-plus'
+jest.useFakeTimers()
 const mockPush = jest.fn()
+const loadFn = jest.fn(() =>
+  Promise.resolve({
+    data: [
+      {
+        id: '1',
+        name: 1,
+      },
+      {
+        id: '2',
+        name: 2,
+      },
+    ],
+  })
+)
+
 jest.mock('vue-router', () => ({
   useRouter: () => ({
     replace: mockPush,
@@ -17,229 +43,118 @@ jest.mock('vue-router', () => ({
     path: '/home',
   }),
 }))
-const loadFn = jest.fn(() =>
-  Promise.resolve({
-    data: [
-      {
-        id: '1',
-        name: 1,
-      },
-      {
-        id: '2',
-        name: 2,
-      },
-      {
-        id: '1',
-        name: 1,
-      },
-      {
-        id: '2',
-        name: 2,
-      },
-      {
-        id: '1',
-        name: 1,
-      },
-      {
-        id: '2',
-        name: 2,
-      },
-      {
-        id: '1',
-        name: 1,
-      },
-      {
-        id: '2',
-        name: 2,
-      },
-      {
-        id: '1',
-        name: 1,
-      },
-      {
-        id: '2',
-        name: 2,
-      },
-    ],
-    size: 10,
-    totalPage: 2,
-    total: 20,
-  })
-)
-const headers = [
-  {
-    label: '姓名',
-    prop: 'name',
-  },
-  {
-    label: '地址',
-    prop: 'address',
-  },
-  {
-    label: '格式化',
-    prop: 'formatName',
-    width: 120,
-    align: 'center',
-    format(val) {
-      return `i am ${val.name}test`
+const getHeaders = () => {
+  return [
+    {
+      label: '姓名',
+      prop: 'name',
     },
-  },
-]
+    {
+      label: 'id',
+      prop: 'id',
+    },
+    {
+      label: '格式化',
+      prop: 'formatName',
+      width: 120,
+      align: 'center',
+      format(val) {
+        return `i am ${val.name}test`
+      },
+    },
+  ]
+}
+
 describe('AdvTable', () => {
-  it('table init', () => {
-    const wrapper = shallowMount(AdvTable, {
-      global: {
-        directives: {
-          Loading: ElLoadingDirective,
+  const wrapper = mount(
+    {
+      data() {
+        return {
+          headers: getHeaders(),
+        }
+      },
+      components: {
+        AdvTable,
+        ElTable,
+        ElTableColumn,
+        ElPagination,
+        ElButton,
+        ElLoading,
+        ElIcon,
+        ElTooltip,
+        ElConfigProvider,
+        useGlobalConfig,
+      },
+      template: `
+      <adv-table :source="getData" :headers="headers" ref="table">
+        <el-table-column prop="failName" label="不出现" />
+        <template #name>
+          <el-table-column prop="name" label="姓名" />
+        </template>   
+        <template #id>
+          <el-table-column prop="id" label="id" />
+        </template>  
+        <template #formatName>
+          <el-table-column prop="formatName" label="格式化" />
+        </template>
+        <template #footer>
+          <div class="custom-footer" @click="refresh">footer</div>
+        </template>   
+      </adv-table>
+    `,
+      methods: {
+        getData() {
+          return loadFn()
+        },
+        refresh() {
+          ;(this.$refs.table as any).refresh()
         },
       },
-      props: {
-        data: [
-          {
-            name: 'test',
-          },
-        ],
-      },
-    })
-    const tableDiv = wrapper.findComponent({
-      name: 'AdvTable',
-    })
-    expect(tableDiv.exists()).toBe(true)
-    enableAutoUnmount(() => {
-      wrapper.unmount()
-    })
-  })
-  it('table init localPage and localSize from query', () => {
-    const wrapper = shallowMount(AdvTable, {
-      props: {
-        source: loadFn,
-        isRecord: true,
-      },
-      global: {
-        directives: {
-          Loading: ElLoadingDirective,
-        },
-      },
-    })
-    const vm = wrapper.vm
-    expect(vm.localCurrentPage).toBe(8)
-    expect(vm.localPageSize).toBe(10)
-    expect(loadFn).toBeCalledTimes(1)
-    // enableAutoUnmount(() => {
-    //   wrapper.unmount()
-    // })
-  })
-  it('table init with not autoRequest', () => {
-    const wrapper = shallowMount(AdvTable, {
-      props: {
-        source: loadFn,
-        autoRequest: false,
-      },
-      global: {
-        directives: {
-          Loading: ElLoadingDirective,
-        },
-      },
-    })
-    const vm = wrapper.vm
-    expect(loadFn).toBeCalledTimes(1)
-    vm.refresh(true)
-    expect(loadFn).toBeCalledTimes(2)
-  })
-  it('table init with isManual', async () => {
-    const wrapper = shallowMount(AdvTable, {
-      props: {
-        source: loadFn,
-        isManual: true,
-      },
-      global: {
-        directives: {
-          Loading: ElLoadingDirective,
-        },
-      },
-    })
-    const tableDiv = wrapper.findComponent({
-      name: 'AdvTable',
-    })
-    expect(loadFn).toBeCalledTimes(3)
-    expect(tableDiv.exists()).toBe(true)
-    const button = tableDiv.findComponent({
-      name: 'ElButton',
-    })
-    await button.trigger('click')
-    expect(loadFn).toBeCalledTimes(4)
-  })
-  it('table setting loading', async () => {
-    const wrapper = shallowMount(AdvTable, {
-      props: {
-        data: [
-          {
-            name: 'test',
-          },
-        ],
-      },
-      global: {
-        directives: {
-          Loading: ElLoadingDirective,
-        },
-      },
-    })
-    const vm = wrapper.vm
-    expect(vm.localLoading).toBe(false)
-    vm.setLoading(true)
-    expect(vm.localLoading).toBe(true)
-  })
-  it('table without pagination', async () => {
-    const wrapper = shallowMount(AdvTable, {
-      props: {
-        source: loadFn,
-        hasPage: false,
-      },
-      global: {
-        directives: {
-          Loading: ElLoadingDirective,
-        },
-      },
-    })
-    expect(wrapper.find('.advtable').find('.advtable-page').exists()).toBe(
-      false
-    )
-  })
-  it('table without pagination', async () => {
-    const wrapper = shallowMount(AdvTable, {
-      props: {
-        source: loadFn,
-        hasPage: false,
-      },
-      global: {
-        directives: {
-          Loading: ElLoadingDirective,
-        },
-      },
-    })
-    expect(wrapper.find('.advtable').find('.advtable-page').exists()).toBe(
-      false
-    )
-  })
-  it('table init with headers prop', async () => {
-    const wrapper = mount(AdvTable, {
-      props: {
-        source: loadFn,
-        headers,
-        hasPage: false,
-      },
-      global: {
-        directives: {
-          Loading: ElLoadingDirective,
-        },
-      },
-    })
+    },
+    {
+      attachTo: 'body',
+    }
+  )
+  it('rendering is correct', async () => {
     await nextTick()
-    const ths = wrapper.findAll('thead th')
+    expect(loadFn).toBeCalledTimes(1)
+    const advTableCom = wrapper.findComponent({
+      name: 'AdvTable',
+    })
+    expect(advTableCom.exists()).toBe(true)
+    const elTableCom = wrapper.getComponent({
+      name: 'ElTable',
+    })
+    const ths = elTableCom.findAll('thead th')
     expect(ths.map((node) => node.text()).filter((o) => o)).toEqual([
       '姓名',
-      '地址',
+      'id',
       '格式化',
     ])
+    const rightPollingBtn = wrapper.find('.right-polling')
+    const rightFreshBtn = wrapper.find('.right-fresh')
+    const rightcolumnBtn = wrapper.find('.right-column')
+    expect(rightPollingBtn.exists()).toBe(false)
+    expect(rightFreshBtn.exists()).toBe(false)
+    expect(rightcolumnBtn.exists()).toBe(true)
+  })
+  it('rendering refresh-btn is correct', async () => {
+    wrapper.setProps({
+      hasRefreshBtn: true,
+    })
+    await nextTick()
+    const rightFreshBtn = wrapper.find('.right-fresh')
+    expect(rightFreshBtn.exists()).toBe(true)
+    rightFreshBtn.trigger('click')
+    expect(loadFn).toBeCalledTimes(2)
+  })
+
+  it('rendering polling-btn is correct', async () => {
+    wrapper.setProps({
+      hasPollingBtn: true,
+    })
+    await nextTick()
+    const rightFreshBtn = wrapper.find('.right-polling')
+    expect(rightFreshBtn.exists()).toBe(true)
   })
 })
