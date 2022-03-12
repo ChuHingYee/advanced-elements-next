@@ -22,7 +22,7 @@
             <ElIcon
               v-if="hasRefreshBtn"
               :size="18"
-              class="right-icon"
+              class="right-icon right-fresh"
               @click="refresh(false)"
             >
               <IconRefreshRight></IconRefreshRight>
@@ -391,11 +391,12 @@ defineExpose({
     display: flex;
     justify-content: space-between;
     align-items: center;
-    height: 40px;
+    padding: 12px 0;
     &__left,
     &__right {
       display: flex;
       align-items: center;
+      height: 100%;
     }
     &__left {
       justify-content: flex-start;
@@ -423,7 +424,7 @@ defineExpose({
     display: flex;
     justify-content: space-between;
     align-items: center;
-    height: 40px;
+    padding: 12px 0;
     background: #fff;
     &__sticky {
       position: sticky;
@@ -434,7 +435,6 @@ defineExpose({
       display: flex;
       justify-content: center;
       align-items: center;
-      height: 40px;
       color: var(--el-color-info);
       font-size: var(--el-font-size-base);
     }

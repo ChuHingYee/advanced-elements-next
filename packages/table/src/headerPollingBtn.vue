@@ -1,5 +1,10 @@
 <template>
-  <ElButton type="primary" :size="elementSize" @click="handlePolling">
+  <ElButton
+    type="primary"
+    :size="elementSize"
+    class="right-polling"
+    @click="handlePolling"
+  >
     <ElIcon
       :size="elementSize !== 'large' ? 14 : 16"
       :class="[isPolling ? 'is-loading' : '', 'polling-icon']"
