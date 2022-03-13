@@ -1,5 +1,17 @@
 # @advanced-elements/table ChangeLog
 
+## 2.0.11
+
+### Patch Changes
+
+#### Features
+
+- UI: update UI (b90081b)
+
+#### Chore
+
+- chore: update element-plus to v2.1.0 (1844f0b)
+
 ## 2.0.10
 
 ### Patch Changes
