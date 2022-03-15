@@ -78,7 +78,7 @@
             :page-size="localPageSize"
             :page-sizes="pageSizes"
             :layout="localPageLayout"
-            :total="localTotal"
+            :total="total"
             @update:current-page="handleCurrentPageChange"
             @update:page-size="handlePageSizeChange"
           />
