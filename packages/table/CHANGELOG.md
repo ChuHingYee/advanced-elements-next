@@ -1,5 +1,12 @@
 # @advanced-elements/table ChangeLog
 
+## 2.0.13
+
+### Patch Changes
+
+#### Bugfixes
+fix: fix the total page wrong when provide total (1aefadb)
+
 ## 2.0.12
 
 ### Patch Changes
