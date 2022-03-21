@@ -1,10 +1,19 @@
 # @advanced-elements/table ChangeLog
 
+## 2.0.14
+
+### Patch Changes
+
+#### Chore
+
+- chore: update element-plus to v2.1.4 (8899f3d)
+
 ## 2.0.13
 
 ### Patch Changes
 
 #### Bugfixes
+
 fix: fix the total page wrong when provide total (1aefadb)
 
 ## 2.0.12
