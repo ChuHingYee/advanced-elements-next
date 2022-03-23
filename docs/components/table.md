@@ -2,6 +2,19 @@
 
 封装于 el-table 和 el-pagination 组件，在不破坏其原有功能基础上,解决表格样板代码过多问题。
 
+## 安装
+
+```shell
+# 选择一个你喜欢的包管理器
+
+# NPM
+$ npm install @advanced-elements/table@'>=2' --save
+# Yarn
+$ yarn add @advanced-elements/table@'>=2'
+# pnpm
+$ pnpm add @advanced-elements/table@'>=2'
+```
+
 ## 渲染表头方式
 
 ### 普通渲染表头
@@ -322,7 +335,7 @@ import 'element-plus/es/components/loading/style/css'
 
 ### 全局设置
 
-如果element-plus版本与组件一致时，不需作任何处理，否则需要手动传值。(建议保持一样版本)
+如果 element-plus 版本与组件一致时，不需作任何处理，否则需要手动传值。(建议保持一样版本)
 
 ```vue
 <script lang="ts" setup>
@@ -335,6 +348,11 @@ const size = useGlobalConfig('size')
 </script>
 
 <template>
-  <adv-table :locale="locale" :z-index="zIndex" :button="button" :size="size"></adv-table>
+  <adv-table
+    :locale="locale"
+    :z-index="zIndex"
+    :button="button"
+    :size="size"
+  ></adv-table>
 </template>
 ```
