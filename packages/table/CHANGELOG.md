@@ -1,5 +1,13 @@
 # @advanced-elements/table ChangeLog
 
+## 2.0.16
+
+### Patch Changes
+
+#### Bugfixes
+
+fix: fix wrong dependencies (d03d871)
+
 ## 2.0.15
 
 ### Patch Changes
