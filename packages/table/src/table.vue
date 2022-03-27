@@ -78,7 +78,7 @@
             :page-size="localPageSize"
             :page-sizes="pageSizes"
             :layout="localPageLayout"
-            :total="total"
+            :total="paginationTotal"
             @update:current-page="handleCurrentPageChange"
             @update:page-size="handlePageSizeChange"
           />
@@ -178,6 +178,9 @@ const customTableProps = computed(() => {
 })
 const hasSource = computed(() => {
   return !!props.source
+})
+const paginationTotal = computed(() => {
+  return hasSource.value ? localTotal.value : props.total ? props.total : 0
 })
 const pageSizes = computed(() => {
   return props.pageSizes || localPageSizes.value
@@ -326,7 +329,12 @@ const refresh = (flag: boolean) => {
 }
 const checkIsSticky = () => {
   nextTick(() => {
-    if (pagination.value && props.clientHeight && props.openSticky) {
+    if (
+      pagination.value &&
+      pagination.value.$el &&
+      props.clientHeight &&
+      props.openSticky
+    ) {
       const rect = pagination.value.$el.getBoundingClientRect()
       if (rect.top > props.clientHeight - 45) {
         isSticky.value = true
