@@ -1,11 +1,13 @@
 <template>
   <ElPopover placement="bottom" trigger="click">
     <template #reference>
-      <ElTooltip content="表头选择" effect="light">
-        <ElIcon :size="18" class="right-icon right-column">
-          <IconSetting></IconSetting>
-        </ElIcon>
-      </ElTooltip>
+      <div>
+        <ElTooltip content="表头选择" effect="light">
+          <ElIcon :size="18" class="right-icon right-column">
+            <IconSetting></IconSetting>
+          </ElIcon>
+        </ElTooltip>
+      </div>
     </template>
     <div class="advcard">
       <div class="advcard-header">
