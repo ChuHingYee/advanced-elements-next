@@ -17,10 +17,8 @@
             v-model:isPolling="isPolling"
             :options="pollingOptions"
           ></HeaderPollingBtn>
-
-          <ElTooltip content="刷新" effect="light">
+          <ElTooltip v-if="hasRefreshBtn" content="刷新" effect="light">
             <ElIcon
-              v-if="hasRefreshBtn"
               :size="18"
               class="right-icon right-fresh"
               @click="refresh(false)"
@@ -28,7 +26,6 @@
               <IconRefreshRight></IconRefreshRight>
             </ElIcon>
           </ElTooltip>
-
           <HeaderColumnSetting
             v-if="headers.length > 0 && hasColumnSetting"
             v-model:headers="localHeader"
