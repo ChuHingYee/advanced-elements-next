@@ -1,5 +1,21 @@
 # @advanced-elements/table ChangeLog
 
+## 2.0.18
+
+### Patch Changes
+
+#### Bugfixes
+
+fix: fix the headerColumnSetting useless (4209a02)
+
+fix: fix refreshBtn has wrong logic (770d958)
+
+fix: fix the total page wrong when provide total (8526d69)
+
+#### Chore
+
+- chore: update element-plus to v2.1.6 (56d95dc)
+
 ## 2.0.16
 
 ### Patch Changes
