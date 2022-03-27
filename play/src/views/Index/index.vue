@@ -3,6 +3,14 @@ import AdvTable from '@advanced-elements/table'
 import type { FormatMaps } from '@advanced-elements/table'
 import { useRouter } from 'vue-router'
 import { ref } from 'vue'
+import 'element-plus/es/components/icon/style/css'
+import 'element-plus/es/components/button/style/css'
+import 'element-plus/es/components/popover/style/css'
+import 'element-plus/es/components/checkbox/style/css'
+import 'element-plus/es/components/tooltip/style/css'
+import 'element-plus/es/components/table/style/css'
+import 'element-plus/es/components/pagination/style/css'
+import 'element-plus/es/components/loading/style/css'
 
 type RequestFunc = (...args: any) => Promise<any>
 const router = useRouter()
