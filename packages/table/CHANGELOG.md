@@ -1,5 +1,13 @@
 # @advanced-elements/table ChangeLog
 
+## 2.0.19
+
+### Patch Changes
+
+#### Chore
+
+- chore: update element-plus to v2.1.7 (2ac7629)
+
 ## 2.0.18
 
 ### Patch Changes
