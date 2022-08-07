@@ -1,6 +1,7 @@
 {
   "semi": false,
   "singleQuote": true,
+  "endOfLine": "auto",
   "overrides": [
     {
       "files": ".prettierrc",

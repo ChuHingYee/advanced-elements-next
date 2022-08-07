@@ -3,21 +3,22 @@
   "private": true,
   "description": "advanced-elements's monorepo",
   "scripts": {
-    "preinstall": "ts-node scripts/disallow-pnpm.ts",
+    "preinstall": "npx only-allow pnpm",
     "prepare": "husky install",
+    "verify:commit": "esno scripts/verify-commit.ts",
     "play": "pnpm -C play dev",
     "lint": "eslint --fix",
-    "test": "pnpm recursive test --filter ./packages",
-    "build:all": "pnpm -r --filter ./packages run build",
-    "release": "ts-node scripts/release.ts",
+    "test": "pnpm --filter ./packages/** test",
+    "build:all": "pnpm --filter ./packages/** build",
+    "release": "esno scripts/release.ts",
     "docs:dev": "vitepress dev docs",
     "docs:build": "vitepress build docs",
-    "docs:release": "ts-node scripts/release-docs.ts"
+    "docs:release": "esno scripts/release-docs.ts"
   },
   "author": "ChuHingYee",
   "license": "MIT",
   "engines": {
-    "pnpm": ">=6"
+    "pnpm": ">=7"
   },
   "devDependencies": {
     "@changesets/changelog-github": "^0.4.3",
@@ -38,6 +39,7 @@
     "eslint-plugin-jest": "^25.3.0",
     "eslint-plugin-prettier": "^4.0.0",
     "eslint-plugin-vue": "^8.0.3",
+    "esno": "^0.16.3",
     "husky": "^7.0.4",
     "jest": "^27.4.3",
     "lint-staged": "^12.3.4",
@@ -49,17 +51,14 @@
     "rollup-plugin-typescript2": "^0.31.1",
     "rollup-plugin-vue": "^6.0.0",
     "sass": "^1.43.5",
-    "ts-node": "^10.4.0",
     "typescript": "^4.4.4",
     "vitepress": "^0.20.5",
     "vitepress-theme-demoblock": "^1.4.2"
-  },
-  "dependencies": {
-    "@advanced-elements/table": "link:packages/table"
   },
   "lint-staged": {
     "{packages,docs,scripts,meta,build}/**/*.{js,ts,tsx,vue}": [
       "eslint --fix"
     ]
-  }
+  },
+  "dependencies": {}
 }

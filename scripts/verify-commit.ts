@@ -1,9 +1,9 @@
 import chalk from 'chalk'
 import fs from 'fs'
-const msgPath = process.env.GIT_PARAMS
+const msgPath = process.argv.slice(2)[0]
 const msg = fs.readFileSync(msgPath as string, 'utf-8').trim()
 const commitRE =
-  /^(((\ud83c[\udf00-\udfff])|(\ud83d[\udc00-\ude4f\ude80-\udeff])|[\u2600-\u2B55]) )?(revert: )?(feat|fix|docs|UI|refactor|⚡perf|workflow|build|CI|typos|chore|tests|types|wip|release|dep|locale)(\(.+\))?: .{1,50}/
+  /^(((\ud83c[\udf00-\udfff])|(\ud83d[\udc00-\ude4f\ude80-\udeff])|[\u2600-\u2B55]) )?(revert: )?(feat|fix|docs|refactor|⚡perf|workflow|build|CI|typos|chore|tests|types|wip|release|dep)(\(.+\))?: .{1,50}/
 if (!(commitRE.test(msg) || msg.indexOf('Merge') === 0)) {
   console.error(
     `  ${chalk.bgRed.white(' ERROR ')} ${chalk.red(
@@ -17,11 +17,7 @@ if (!(commitRE.test(msg) || msg.indexOf('Merge') === 0)) {
     )}\n    ${chalk.green(
       '\uD83D\uDCDD docs(\u6A21\u5757): \u66F4\u65B0\u4E86\u4E00\u4E0B\u6587\u6863'
     )}\n    ${chalk.green(
-      '\uD83C\uDF37 UI(\u6A21\u5757): \u4FEE\u6539\u4E86\u4E00\u4E0B\u6837\u5F0F'
-    )}\n    ${chalk.green(
       '\uD83C\uDFF0 chore(\u6A21\u5757): \u5BF9\u811A\u624B\u67B6\u505A\u4E86\u4E9B\u66F4\u6539'
-    )}\n    ${chalk.green(
-      '\uD83C\uDF10 locale(\u6A21\u5757): \u4E3A\u56FD\u9645\u5316\u505A\u4E86\u5FAE\u5C0F\u7684\u8D21\u732E'
     )}\n    `
   )
   process.exit(1) // 返回非0直接退出
