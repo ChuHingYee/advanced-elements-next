@@ -1,0 +1,58 @@
+@use 'element-plus/theme-chalk/src/mixins/function.scss' as *;
+
+.advtable {
+  position: relative;
+
+  &-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0;
+    &__left,
+    &__right {
+      display: flex;
+      align-items: center;
+      height: 100%;
+    }
+    &__left {
+      justify-content: flex-start;
+    }
+    &__right {
+      justify-content: flex-end;
+      .right {
+        &-icon {
+          margin-left: 12px;
+          color: getCssVar('button', 'text-color');
+          cursor: pointer;
+          &:hover {
+            color: getCssVar('color', 'primary');
+          }
+        }
+      }
+    }
+  }
+
+  &-main {
+    margin-bottom: 10px;
+  }
+
+  &-page {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0;
+    background: #fff;
+    &__sticky {
+      position: sticky;
+      bottom: 0;
+      z-index: 8;
+    }
+    &__manual {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: getCssVar('color', 'info');
+      font-size: getCssVar('font', 'size-base');
+    }
+  }
+}

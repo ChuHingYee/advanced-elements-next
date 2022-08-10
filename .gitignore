@@ -6,6 +6,7 @@ node_modules
 .pnpm-debug.log*
 packages/*/es
 packages/*/lib
+packages/*/style
 docs/.vitepress/dist
 coverage
 

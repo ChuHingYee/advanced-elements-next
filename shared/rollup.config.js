@@ -4,6 +4,7 @@ import vue from 'rollup-plugin-vue'
 import esbuild from 'rollup-plugin-esbuild'
 import postcss from 'rollup-plugin-postcss'
 import commonjs from '@rollup/plugin-commonjs'
+import copy from 'rollup-plugin-copy'
 import { terser } from 'rollup-plugin-terser'
 
 const isDev = process.env.NODE_ENV !== 'production'
@@ -26,6 +27,14 @@ const plugins = [
     minimize: !isDev,
   }),
   !isDev && terser({ toplevel: true }),
+  copy({
+    targets: [
+      {
+        src: 'src/style/*',
+        dest: 'style',
+      },
+    ],
+  }),
 ]
 
 function createBanner(pkg) {

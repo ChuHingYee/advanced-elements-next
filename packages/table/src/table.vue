@@ -1,88 +1,81 @@
 <template>
-  <ElConfigProvider
-    :locale="elementLocale"
-    :size="elementSize"
-    :button="elementButton"
-    :z-index="elementZIndex"
-  >
-    <div v-if="isInit" class="advtable">
-      <div v-if="hasHeader" class="advtable-header">
-        <div class="advtable-header__left">
-          <slot name="header-left"></slot>
-        </div>
-        <div class="advtable-header__right">
-          <slot name="header-right"></slot>
-          <HeaderPollingBtn
-            v-if="hasPollingBtn && hasSource && !isManual"
-            v-model:isPolling="isPolling"
-            :options="pollingOptions"
-          ></HeaderPollingBtn>
-          <ElTooltip v-if="hasRefreshBtn" content="刷新" effect="light">
-            <ElIcon
-              :size="18"
-              class="right-icon right-fresh"
-              @click="refresh(false)"
-            >
-              <IconRefreshRight></IconRefreshRight>
-            </ElIcon>
-          </ElTooltip>
-          <HeaderColumnSetting
-            v-if="headers.length > 0 && hasColumnSetting"
-            v-model:headers="localHeader"
-          ></HeaderColumnSetting>
-        </div>
+  <div v-if="isInit" class="advtable">
+    <div v-if="hasHeader" class="advtable-header">
+      <div class="advtable-header__left">
+        <slot name="header-left"></slot>
       </div>
-      <ElTable v-bind="customTableProps" ref="table" class="advtable-main">
-        <template v-if="localHeader.length > 0">
-          <template v-for="header in localHeader">
-            <template v-if="header.isVisible">
-              <slot
-                v-if="slots[header.prop]"
-                :key="header.prop + 'slot'"
-                :name="header.prop"
-              ></slot>
-              <ElTableColumn v-else v-bind="header" :key="header.prop">
-                <template #default="{ row }">
-                  {{ header.format ? header.format(row) : row[header.prop] }}
-                </template>
-              </ElTableColumn>
-            </template>
-          </template>
-        </template>
-        <slot v-else></slot>
-      </ElTable>
-      <div
-        v-if="hasPage"
-        ref="page"
-        class="advtable-page"
-        :class="paginationClass"
-      >
-        <template v-if="isManual">
-          <ElButton
-            v-if="hasMore"
-            :loading="localLoading"
-            @click="loadDataByManual"
-            >加载更多</ElButton
+      <div class="advtable-header__right">
+        <slot name="header-right"></slot>
+        <HeaderPollingBtn
+          v-if="hasPollingBtn && hasSource && !isManual"
+          v-model:isPolling="isPolling"
+          :options="pollingOptions"
+        ></HeaderPollingBtn>
+        <ElTooltip v-if="hasRefreshBtn" content="刷新" effect="light">
+          <ElIcon
+            :size="18"
+            class="right-icon right-fresh"
+            @click="refresh(false)"
           >
-          <span v-else-if="!hasMore && !localLoading">没有更多了</span>
-        </template>
-        <template v-else>
-          <slot name="footer"></slot>
-          <ElPagination
-            ref="pagination"
-            v-model:currentPage="localCurrentPage"
-            :small="elementSize === 'small'"
-            :page-size="localPageSize"
-            :page-sizes="pageSizes"
-            :layout="localPageLayout"
-            :total="paginationTotal"
-            @update:current-page="handleCurrentPageChange"
-            @update:page-size="handlePageSizeChange"
-          />
-        </template>
+            <IconRefreshRight></IconRefreshRight>
+          </ElIcon>
+        </ElTooltip>
+        <HeaderColumnSetting
+          v-if="headers.length > 0 && hasColumnSetting"
+          v-model:headers="localHeader"
+        ></HeaderColumnSetting>
       </div>
     </div>
-  </ElConfigProvider>
+    <ElTable v-bind="customTableProps" ref="table" class="advtable-main">
+      <template v-if="localHeader.length > 0">
+        <template v-for="header in localHeader">
+          <template v-if="header.isVisible">
+            <slot
+              v-if="slots[header.prop]"
+              :key="header.prop + 'slot'"
+              :name="header.prop"
+            ></slot>
+            <ElTableColumn v-else v-bind="header" :key="header.prop">
+              <template #default="{ row }">
+                {{ header.format ? header.format(row) : row[header.prop] }}
+              </template>
+            </ElTableColumn>
+          </template>
+        </template>
+      </template>
+      <slot v-else></slot>
+    </ElTable>
+    <div
+      v-if="hasPage"
+      ref="page"
+      class="advtable-page"
+      :class="paginationClass"
+    >
+      <template v-if="isManual">
+        <ElButton
+          v-if="hasMore"
+          :loading="localLoading"
+          @click="loadDataByManual"
+          >加载更多</ElButton
+        >
+        <span v-else-if="!hasMore && !localLoading">没有更多了</span>
+      </template>
+      <template v-else>
+        <slot name="footer"></slot>
+        <ElPagination
+          ref="pagination"
+          v-model:currentPage="localCurrentPage"
+          :small="elementSize === 'small'"
+          :page-size="localPageSize"
+          :page-sizes="pageSizes"
+          :layout="localPageLayout"
+          :total="paginationTotal"
+          @update:current-page="handleCurrentPageChange"
+          @update:page-size="handlePageSizeChange"
+        />
+      </template>
+    </div>
+  </div>
 </template>
 
 <script lang="ts">
@@ -111,7 +104,6 @@ import {
   ElLoading,
   ElIcon,
   ElTooltip,
-  ElConfigProvider,
   useGlobalConfig,
 } from 'element-plus'
 import { RefreshRight as IconRefreshRight } from '@element-plus/icons-vue'
@@ -188,15 +180,6 @@ const hasMore = computed(() => {
 })
 const elementSize = computed(() => {
   return props.size || useGlobalConfig('size').value
-})
-const elementLocale = computed(() => {
-  return props.locale || useGlobalConfig('locale').value
-})
-const elementZIndex = computed(() => {
-  return props.zIndex || useGlobalConfig('zIndex').value
-})
-const elementButton = computed(() => {
-  return props.button || useGlobalConfig('button').value
 })
 const hasHeader = computed(() => {
   return (
@@ -387,62 +370,3 @@ defineExpose({
   setLoading,
 })
 </script>
-
-<style lang="scss">
-.advtable {
-  position: relative;
-
-  &-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 12px 0;
-    &__left,
-    &__right {
-      display: flex;
-      align-items: center;
-      height: 100%;
-    }
-    &__left {
-      justify-content: flex-start;
-    }
-    &__right {
-      justify-content: flex-end;
-      .right {
-        &-icon {
-          margin-left: 12px;
-          color: var(--el-button-text-color);
-          cursor: pointer;
-          &:hover {
-            color: var(--el-color-primary);
-          }
-        }
-      }
-    }
-  }
-
-  &-main {
-    margin-bottom: 10px;
-  }
-
-  &-page {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 12px 0;
-    background: #fff;
-    &__sticky {
-      position: sticky;
-      bottom: 0;
-      z-index: 8;
-    }
-    &__manual {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      color: var(--el-color-info);
-      font-size: var(--el-font-size-base);
-    }
-  }
-}
-</style>

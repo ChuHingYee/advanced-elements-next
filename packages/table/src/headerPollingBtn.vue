@@ -100,9 +100,3 @@ onBeforeUnmount(() => {
   timer && clearTimeout(timer)
 })
 </script>
-
-<style lang="scss" scopde>
-.polling-icon {
-  margin-right: 6px;
-}
-</style>

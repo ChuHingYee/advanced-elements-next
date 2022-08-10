@@ -1,0 +1,38 @@
+@use 'element-plus/theme-chalk/src/mixins/config.scss' as *;
+
+.advcard {
+  &-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    &__reset {
+      width: 40px;
+      text-align: center;
+      cursor: pointer;
+    }
+  }
+  &-body {
+    display: flex;
+    flex-direction: column;
+    &__check {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      height: 30px;
+      .#{$namespace}-checkbox.#{$namespace}-checkbox--large {
+        height: 100%;
+      }
+      .check {
+        &-btns {
+          width: 40px;
+          display: flex;
+          align-items: center;
+          justify-content: space-around;
+          &__icon {
+            cursor: pointer;
+          }
+        }
+      }
+    }
+  }
+}
