@@ -290,7 +290,7 @@ const refresh = (flag: boolean) => {
           localCurrentPage.value = 1
         }
         if (!s) {
-          localPageSize.value = 10
+          localPageSize.value = pageSizes.value[0] || 10
         }
       }
     }
