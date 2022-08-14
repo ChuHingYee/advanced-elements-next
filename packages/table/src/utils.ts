@@ -1,4 +1,4 @@
-import type { SoruceData, FormatMaps } from './defaults'
+import type { FormatMaps, SoruceData } from './defaults'
 export function formatData(source: any, maps: FormatMaps) {
   const result: SoruceData = {
     data: [],

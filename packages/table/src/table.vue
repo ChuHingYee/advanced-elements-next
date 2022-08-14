@@ -1,29 +1,29 @@
 <template>
-  <div v-if="isInit" class="advtable">
+  <div class="advtable">
     <div v-if="hasHeader" class="advtable-header">
       <div class="advtable-header__left">
-        <slot name="header-left"></slot>
+        <slot name="header-left" />
       </div>
       <div class="advtable-header__right">
-        <slot name="header-right"></slot>
+        <slot name="header-right" />
         <HeaderPollingBtn
           v-if="hasPollingBtn && hasSource && !isManual"
           v-model:isPolling="isPolling"
           :options="pollingOptions"
-        ></HeaderPollingBtn>
+        />
         <ElTooltip v-if="hasRefreshBtn" content="刷新" effect="light">
           <ElIcon
             :size="18"
             class="right-icon right-fresh"
             @click="refresh(false)"
           >
-            <IconRefreshRight></IconRefreshRight>
+            <IconRefreshRight />
           </ElIcon>
         </ElTooltip>
         <HeaderColumnSetting
           v-if="headers.length > 0 && hasColumnSetting"
           v-model:headers="localHeader"
-        ></HeaderColumnSetting>
+        />
       </div>
     </div>
     <ElTable v-bind="customTableProps" ref="table" class="advtable-main">
@@ -34,7 +34,7 @@
               v-if="slots[header.prop]"
               :key="header.prop + 'slot'"
               :name="header.prop"
-            ></slot>
+            />
             <ElTableColumn v-else v-bind="header" :key="header.prop">
               <template #default="{ row }">
                 {{ header.format ? header.format(row) : row[header.prop] }}
@@ -43,7 +43,7 @@
           </template>
         </template>
       </template>
-      <slot v-else></slot>
+      <slot v-else />
     </ElTable>
     <div
       v-if="hasPage"
@@ -61,7 +61,7 @@
         <span v-else-if="!hasMore && !localLoading">没有更多了</span>
       </template>
       <template v-else>
-        <slot name="footer"></slot>
+        <slot name="footer" />
         <ElPagination
           ref="pagination"
           v-model:currentPage="localCurrentPage"
@@ -78,43 +78,40 @@
   </div>
 </template>
 
-<script lang="ts">
-export default {
-  name: 'AdvTable',
-  inheritAttrs: false,
-}
-</script>
+<script lang="ts"></script>
 
 <script lang="ts" setup>
 import {
-  ref,
   computed,
-  watch,
-  onMounted,
-  nextTick,
-  provide,
   getCurrentInstance,
+  nextTick,
+  onBeforeMount,
+  onMounted,
+  provide,
+  ref,
   useSlots,
+  watch,
 } from 'vue'
 import {
+  ElButton,
+  ElIcon,
+  ElLoading,
+  ElPagination,
   ElTable,
   ElTableColumn,
-  ElPagination,
-  ElButton,
-  ElLoading,
-  ElIcon,
   ElTooltip,
   useGlobalConfig,
 } from 'element-plus'
+import tableProps from 'element-plus/lib/components/table/src/table/defaults'
 import { RefreshRight as IconRefreshRight } from '@element-plus/icons-vue'
 import HeaderColumnSetting from './headerColumnSetting.vue'
 import HeaderPollingBtn from './headerPollingBtn.vue'
-import tableProps from 'element-plus/lib/components/table/src/table/defaults'
 import { advProps } from './defaults'
 import { formatData } from './utils'
 import type { LocalHeader } from './defaults'
 import type { LoadingInstance } from 'element-plus/lib/components/loading/src/loading'
-import type { Router, RouteLocationNormalizedLoaded } from 'vue-router'
+import type { RouteLocationNormalizedLoaded, Router } from 'vue-router'
+
 type TablePropsKeys = keyof typeof tableProps
 
 const props = defineProps(advProps)
@@ -123,7 +120,6 @@ const emit = defineEmits<{
 }>()
 let loadingInstance: LoadingInstance
 const slots = useSlots()
-const isInit = ref(false)
 const table = ref()
 const instance = getCurrentInstance()!
 const router = instance.appContext.config.globalProperties.$router as Router
@@ -333,7 +329,7 @@ watch(
     immediate: true,
   }
 )
-onMounted(() => {
+onBeforeMount(() => {
   if (props.headers && props.headers.length > 0) {
     localHeader.value = props.headers.map((header) => {
       return {
@@ -354,7 +350,8 @@ onMounted(() => {
       localPageSize.value = Number(s as string)
     }
   }
-  isInit.value = true
+})
+onMounted(() => {
   if (props.autoRequest) {
     nextTick(() => {
       request()
@@ -369,4 +366,10 @@ defineExpose({
   refresh,
   setLoading,
 })
+</script>
+
+<script lang="ts">
+export default {
+  name: 'AdvTable',
+}
 </script>

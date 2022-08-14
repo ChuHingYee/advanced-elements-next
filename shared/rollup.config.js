@@ -1,6 +1,7 @@
 import { nodeResolve } from '@rollup/plugin-node-resolve'
 import typescript from 'rollup-plugin-typescript2'
-import vue from 'rollup-plugin-vue'
+import vue from '@vitejs/plugin-vue'
+import vueJsx from '@vitejs/plugin-vue-jsx'
 import esbuild from 'rollup-plugin-esbuild'
 import postcss from 'rollup-plugin-postcss'
 import commonjs from '@rollup/plugin-commonjs'
@@ -13,7 +14,10 @@ const plugins = [
   typescript({
     tsconfig: 'tsconfig.json',
   }),
-  vue({ target: 'browser' }),
+  vue({
+    isProduction: true,
+  }),
+  vueJsx(),
   nodeResolve({
     extensions: ['.mjs', '.js', '.json', '.ts'],
   }),

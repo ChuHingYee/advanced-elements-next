@@ -1,6 +1,6 @@
-import chalk from 'chalk'
 import { join } from 'path'
 import { execSync as exec } from 'child_process'
+import chalk from 'chalk'
 import { docsRoot } from '../shared/paths'
 const filesPath = join(docsRoot, '.vitepress', 'dist')
 const { log } = console

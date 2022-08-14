@@ -9,22 +9,22 @@
       :size="elementSize !== 'large' ? 14 : 16"
       :class="[isPolling ? 'is-loading' : '', 'polling-icon']"
     >
-      <IconRefreshRight v-if="isPolling"></IconRefreshRight>
-      <IconRefresh v-else></IconRefresh>
+      <IconRefreshRight v-if="isPolling" />
+      <IconRefresh v-else />
     </ElIcon>
     {{ isPolling ? stopTip : startTip }}
   </ElButton>
 </template>
 
 <script lang="ts" setup>
-import type { PropType } from 'vue'
-import { inject, computed, onBeforeUnmount } from 'vue'
-import { ElIcon, ElButton, useSize } from 'element-plus'
-import {
-  RefreshRight as IconRefreshRight,
-  Refresh as IconRefresh,
-} from '@element-plus/icons-vue'
+import { computed, inject, onBeforeUnmount } from 'vue'
+import { ElButton, ElIcon, useSize } from 'element-plus'
 import { useVModel } from '@vueuse/core'
+import {
+  Refresh as IconRefresh,
+  RefreshRight as IconRefreshRight,
+} from '@element-plus/icons-vue'
+import type { PropType } from 'vue'
 import type { AdvTableContext, PollingOptions } from './defaults'
 const props = defineProps({
   options: {

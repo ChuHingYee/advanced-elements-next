@@ -4,7 +4,7 @@
       <div>
         <ElTooltip content="表头选择" effect="light">
           <ElIcon :size="18" class="right-icon right-column">
-            <IconSetting></IconSetting>
+            <IconSetting />
           </ElIcon>
         </ElTooltip>
       </div>
@@ -15,12 +15,12 @@
           v-model="isChooseAll"
           :indeterminate="isIndeterminate"
           size="large"
-          @change="handleHeaderChange($event, 'all')"
+          @change="handleHeaderChange($event as boolean, 'all')"
           >列展示</ElCheckbox
         >
         <ElButton
           size="large"
-          type="text"
+          link
           class="advcard-header__reset"
           @click="handleHeaderChange('none')"
           >重置</ElButton
@@ -35,7 +35,7 @@
           <ElCheckbox
             :model-value="header.isVisible"
             size="large"
-            @change="handleHeaderChange($event, header)"
+            @change="handleHeaderChange($event as boolean, header)"
             >{{ header.label }}</ElCheckbox
           >
           <div class="check-btns">
@@ -43,13 +43,13 @@
               class="check-btns__icon"
               @click="handleChangeSort(index, 0)"
             >
-              <IconCaretTop></IconCaretTop>
+              <IconCaretTop />
             </ElIcon>
             <ElIcon
               class="check-btns__icon"
               @click="handleChangeSort(index, 1)"
             >
-              <IconCaretBottom></IconCaretBottom>
+              <IconCaretBottom />
             </ElIcon>
           </div>
         </div>
@@ -59,21 +59,21 @@
 </template>
 
 <script lang="ts" setup>
-import type { PropType } from 'vue'
-import { ref, onMounted, nextTick } from 'vue'
+import { nextTick, onMounted, ref } from 'vue'
 import {
-  ElIcon,
   ElButton,
+  ElCheckbox,
+  ElIcon,
   ElPopover,
   ElTooltip,
-  ElCheckbox,
 } from 'element-plus'
-import {
-  Setting as IconSetting,
-  CaretTop as IconCaretTop,
-  CaretBottom as IconCaretBottom,
-} from '@element-plus/icons-vue'
 import { useVModel } from '@vueuse/core'
+import {
+  CaretBottom as IconCaretBottom,
+  CaretTop as IconCaretTop,
+  Setting as IconSetting,
+} from '@element-plus/icons-vue'
+import type { PropType } from 'vue'
 import type { LocalHeader } from './defaults'
 interface HeadersMap {
   [key: string]: LocalHeader

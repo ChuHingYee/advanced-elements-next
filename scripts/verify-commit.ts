@@ -1,9 +1,9 @@
-import chalk from 'chalk'
 import fs from 'fs'
+import chalk from 'chalk'
 const msgPath = process.argv.slice(2)[0]
 const msg = fs.readFileSync(msgPath as string, 'utf-8').trim()
 const commitRE =
-  /^(((\ud83c[\udf00-\udfff])|(\ud83d[\udc00-\ude4f\ude80-\udeff])|[\u2600-\u2B55]) )?(revert: )?(feat|fix|docs|refactor|⚡perf|workflow|build|CI|typos|chore|tests|types|wip|release|dep)(\(.+\))?: .{1,50}/
+  /^(((\uD83C[\uDF00-\uDFFF])|(\uD83D[\uDC00-\uDE4F\uDE80-\uDEFF])|[\u2600-\u2B55]) )?(revert: )?(feat|fix|docs|refactor|⚡perf|workflow|build|CI|typos|chore|tests|types|wip|release|dep)(\(.+\))?: .{1,50}/
 if (!(commitRE.test(msg) || msg.indexOf('Merge') === 0)) {
   console.error(
     `  ${chalk.bgRed.white(' ERROR ')} ${chalk.red(

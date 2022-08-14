@@ -1,15 +1,13 @@
-import type { PropType } from 'vue'
 import tableProps from 'element-plus/lib/components/table/src/table/defaults'
-import { paginationProps, configProviderProps } from 'element-plus'
+import { paginationProps } from 'element-plus'
+import type { PropType } from 'vue'
 
 export type SoruceData = {
   data: any[]
   total: number
 }
 
-export type FormatMaps = {
-  [key: string]: keyof SoruceData
-}
+export type FormatMaps = Record<string, keyof SoruceData>
 
 export type Fn = (...args: any[]) => void
 
@@ -45,7 +43,6 @@ export interface AdvTableContext {
 export const advProps = {
   ...tableProps,
   ...paginationProps,
-  ...configProviderProps,
   hasColumnSetting: {
     type: Boolean,
     default: true,
