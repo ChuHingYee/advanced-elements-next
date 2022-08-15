@@ -1,0 +1,47 @@
+@use 'element-plus/theme-chalk/src/mixins/function.scss' as *;
+@use 'element-plus/theme-chalk/src/mixins/config.scss' as *;
+
+.adv {
+  &-form {
+    &--header {
+      line-height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      .header {
+        &-label {
+          font-size: getCssVar('form', 'label-font-size');
+          color: getCssVar('text', 'color-regular');
+          flex: 1;
+        }
+        &-btns {
+          display: flex;
+          align-items: center;
+          justify-content: flex-end;
+          &--icon {
+            width: 16px;
+            cursor: pointer;
+            user-select: none;
+            color: getCssVar('text', 'color-regular');
+            &:last-child {
+              margin-left: 6px;
+            }
+          }
+        }
+      }
+    }
+    &--container {
+      padding: 12px;
+      &__border {
+        border: 1px solid getCssVar('border', 'color');
+        border-radius: var(
+          --el-input-border-radius,
+          getCssVar('border', 'radius-base')
+        );
+      }
+    }
+  }
+}
+::v-deep .#{$namespace}-form-item__label {
+  flex: 1;
+}

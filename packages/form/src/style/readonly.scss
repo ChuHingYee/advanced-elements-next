@@ -1,0 +1,4 @@
+@use 'element-plus/theme-chalk/src/mixins/function.scss' as *;
+.adv-field-readonly {
+  color: getCssVar('text', 'color-regular');
+}
