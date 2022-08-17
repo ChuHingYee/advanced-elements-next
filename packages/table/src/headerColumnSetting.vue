@@ -182,3 +182,7 @@ onMounted(() => {
   handleHeaderChange('none')
 })
 </script>
+
+<style lang="scss">
+@use './style/headerColumnSetting.scss';
+</style>

@@ -1,3 +1,4 @@
+import '../../style/readonly.scss'
 interface Props {
   text: string
   onAdvClick?: () => void

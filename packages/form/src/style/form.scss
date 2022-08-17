@@ -40,6 +40,13 @@
         );
       }
     }
+    &--lbtn {
+      width: 100%;
+      margin-top: 12px;
+      &__main {
+        width: 100%;
+      }
+    }
   }
 }
 ::v-deep .#{$namespace}-form-item__label {

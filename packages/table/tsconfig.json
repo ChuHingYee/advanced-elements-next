@@ -15,5 +15,10 @@
     "resolveJsonModule": true,
     "skipLibCheck": true
   },
-  "exclude": ["rollup.config.ts", "__test__"]
+  "exclude": [
+    "rollup.config.ts",
+    "vitest.config.ts",
+    "vitest.setup",
+    "__test__"
+  ]
 }

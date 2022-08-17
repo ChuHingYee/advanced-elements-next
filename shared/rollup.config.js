@@ -29,6 +29,15 @@ const plugins = [
   postcss({
     plugins: [require('autoprefixer')],
     minimize: !isDev,
+    extract: true,
+    use: [
+      [
+        'sass',
+        {
+          includePaths: ['node_modules'],
+        },
+      ],
+    ],
   }),
   !isDev && terser({ toplevel: true }),
   copy({
@@ -57,6 +66,13 @@ function createOutput(option, pkg) {
   }
 }
 
+function generateExternal(pkg) {
+  const { dependencies = {}, peerDependencies = {} } = pkg
+  const _peerDependencies = Object.keys(peerDependencies)
+  const _dependencies = Object.keys(dependencies)
+  return ['@vue', ..._peerDependencies, ..._dependencies]
+}
+
 export function createConfig(pkg) {
   return {
     input: 'index.ts',
@@ -81,7 +97,7 @@ export function createConfig(pkg) {
         pkg
       ),
     ],
-    external: ['vue', 'element-plus'],
+    external: generateExternal(pkg),
     plugins,
   }
 }

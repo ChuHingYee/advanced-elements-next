@@ -373,3 +373,7 @@ export default {
   name: 'AdvTable',
 }
 </script>
+
+<style lang="scss">
+@use './style/table.scss';
+</style>

@@ -100,3 +100,7 @@ onBeforeUnmount(() => {
   timer && clearTimeout(timer)
 })
 </script>
+
+<style lang="scss">
+@use './style/headerPollingBtn.scss';
+</style>

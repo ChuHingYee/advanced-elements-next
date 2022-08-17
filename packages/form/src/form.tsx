@@ -2,7 +2,6 @@ import { computed, defineComponent, inject, ref, watch } from 'vue'
 import { ElButton, ElCol, ElForm, ElFormItem, ElRow } from 'element-plus'
 import AdvFormItem from './formItem.vue'
 import { advFormOption } from './formProp'
-import FormListBtn from './formListBtn'
 import {
   advFormContextKey,
   advFormRootPropKey,
@@ -13,6 +12,7 @@ import useModel from './useModel'
 import type { FormRefItem } from './formWrap'
 import type { FormInstance, FormValidateFailure } from 'element-plus'
 import type { AdvFormContext } from './tokens'
+import './style/form.scss'
 
 type ValidateTask = Promise<boolean | FormValidateFailure['fields']>
 
@@ -133,10 +133,14 @@ const AdvForm = defineComponent({
         }
       }
     }
-    function handleFormChange(flag: 0 | 1) {
-      const propInfo = getParentProp(props.prop)
-      if (propInfo) {
-        advFormContext?.updateForm(propInfo.parent, flag, propInfo.current)
+    function handleFormChange(flag: 0 | 1, prop = '') {
+      if (prop) {
+        advFormContext?.updateForm(prop, flag)
+      } else {
+        const propInfo = getParentProp(props.prop)
+        if (propInfo) {
+          advFormContext?.updateForm(propInfo.parent, flag, propInfo.current)
+        }
       }
     }
     watch(
@@ -193,7 +197,7 @@ const AdvForm = defineComponent({
               {combineFormProps.value.hasFormBtns && (
                 <div class="header-btns">
                   <svg
-                    onClick={handleFormChange.bind(this, 0)}
+                    onClick={handleFormChange.bind(this, 0, '')}
                     class="header-btns--icon"
                     viewBox="0 0 1024 1024"
                     xmlns="http://www.w3.org/2000/svg"
@@ -209,7 +213,7 @@ const AdvForm = defineComponent({
                     ></path>
                   </svg>
                   <svg
-                    onClick={handleFormChange.bind(this, 1)}
+                    onClick={handleFormChange.bind(this, 1, '')}
                     class="header-btns--icon"
                     viewBox="0 0 1024 1024"
                     xmlns="http://www.w3.org/2000/svg"
@@ -274,10 +278,18 @@ const AdvForm = defineComponent({
                             )}
                             <div class="adv-form--container">
                               <AdvForm {...customProps}></AdvForm>
-                              <FormListBtn
-                                buttonText="新增"
-                                prop={combineProp}
-                              ></FormListBtn>
+                              <div class="adv-form--lbtn">
+                                <ElButton
+                                  class="adv-form--lbtn__main"
+                                  onClick={handleFormChange.bind(
+                                    this,
+                                    0,
+                                    combineProp
+                                  )}
+                                >
+                                  新增
+                                </ElButton>
+                              </div>
                             </div>
                           </div>
                         )}
