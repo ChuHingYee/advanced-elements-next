@@ -7,4 +7,4 @@ export type SFCWithInstall<T> = T & Plugin
 }
 export default AdvForm
 export * from './src/formWrap'
-export { useModel }
+export { useModel, AdvForm }
