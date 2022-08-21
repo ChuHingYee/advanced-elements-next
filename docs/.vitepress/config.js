@@ -41,6 +41,15 @@ module.exports = {
             link: '/components/table'
           }],
         },
+        {
+          title: '表单',
+          collapsable: false,
+          sidebarDepth: 0,
+          children: [{
+            text: '表单',
+            link: '/components/form'
+          }],
+        },
       ],
     },
   },

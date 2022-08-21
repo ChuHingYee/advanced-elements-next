@@ -3,3 +3,4 @@
 Advanced Elements 是基于 Element Plus 而开发的模板组件，提供了更高级别的抽象支持，开箱即用。
 
 - [AdvTable](./table) 表格模板组件，抽象网络请求和表格格式化
+- [AdvForm](./form) 表单组件，JSON 表单

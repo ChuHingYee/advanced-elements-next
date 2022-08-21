@@ -24,7 +24,7 @@ $ pnpm add @advanced-elements/table@'>=2'
 ```vue
 <template>
   <adv-table :data="data" style="width: 100%">
-    <el-table-column prop="name" label="姓名"></el-table-column>
+    <el-table-column prop="name" label="姓名"/>
     <el-table-column label="格式化" width="120" align="center">
       <template #default="scope">
         <span>{{ scope.row.name }}test</span>
@@ -34,7 +34,7 @@ $ pnpm add @advanced-elements/table@'>=2'
 </template>
 
 <script>
-import { ref, defineComponent } from 'vue'
+import { defineComponent, ref } from 'vue'
 
 export default defineComponent({
   name: 'Demo1',
@@ -63,11 +63,11 @@ export default defineComponent({
 
 ```vue
 <template>
-  <adv-table :data="data" :headers="headers" style="width: 100%"></adv-table>
+  <adv-table :data="data" :headers="headers" style="width: 100%"/>
 </template>
 
 <script>
-import { ref, defineComponent } from 'vue'
+import { defineComponent, ref } from 'vue'
 
 export default defineComponent({
   name: 'Demo2',
@@ -114,7 +114,7 @@ export default defineComponent({
 ```vue
 <template>
   <adv-table :source="request" style="width: 100%">
-    <el-table-column prop="name" label="姓名"></el-table-column>
+    <el-table-column prop="name" label="姓名"/>
     <el-table-column label="格式化" width="120" align="center">
       <template #default="scope">
         <span>{{ scope.row.name }}test</span>
@@ -124,7 +124,7 @@ export default defineComponent({
 </template>
 
 <script>
-import { ref, defineComponent } from 'vue'
+import { defineComponent, ref } from 'vue'
 
 export default defineComponent({
   name: 'Demo3',
@@ -166,9 +166,9 @@ export default defineComponent({
 
 ```vue
 <template>
-  <adv-table :source="request" ref="table" :auto="false">
-    <el-table-column prop="name" label="姓名" width="180"> </el-table-column>
-    <el-table-column prop="id" label="id证明"> </el-table-column>
+  <adv-table ref="table" :source="request" :auto="false">
+    <el-table-column prop="name" label="姓名" width="180"/>
+    <el-table-column prop="id" label="id证明"/>
     <template #footer>
       <el-button @click="refresh">获取数据</el-button>
     </template>
@@ -176,7 +176,7 @@ export default defineComponent({
 </template>
 
 <script>
-import { ref, defineComponent } from 'vue'
+import { defineComponent, ref } from 'vue'
 
 export default defineComponent({
   name: 'Demo4',
@@ -222,14 +222,14 @@ export default defineComponent({
 
 ```vue
 <template>
-  <adv-table :source="request" :isManual="true">
-    <el-table-column prop="name" label="姓名" width="180"> </el-table-column>
-    <el-table-column prop="id" label="id证明"> </el-table-column>
+  <adv-table :source="request" :is-manual="true">
+    <el-table-column prop="name" label="姓名" width="180"/>
+    <el-table-column prop="id" label="id证明"/>
   </adv-table>
 </template>
 
 <script>
-import { ref, defineComponent } from 'vue'
+import { defineComponent, ref } from 'vue'
 
 export default defineComponent({
   name: 'Demo5',
@@ -273,13 +273,13 @@ export default defineComponent({
 ```vue
 <template>
   <adv-table :source="request" :has-polling-btn="true" :has-refresh-btn="true">
-    <el-table-column prop="name" label="姓名" width="180"> </el-table-column>
-    <el-table-column prop="id" label="id证明"> </el-table-column>
+    <el-table-column prop="name" label="姓名" width="180"/>
+    <el-table-column prop="id" label="id证明"/>
   </adv-table>
 </template>
 
 <script>
-import { ref, defineComponent } from 'vue'
+import { defineComponent, ref } from 'vue'
 
 export default defineComponent({
   name: 'Demo5',
@@ -320,9 +320,10 @@ export default defineComponent({
 
 ### 关于样式
 
-如果项目是自动导入 element-plus，需要手动引入相关样式
+#### 如果项目是自动导入 element-plus，需要手动引入相关样式
 
 ```javascript
+// element-plus样式
 import 'element-plus/es/components/icon/style/css'
 import 'element-plus/es/components/button/style/css'
 import 'element-plus/es/components/popover/style/css'
@@ -332,27 +333,14 @@ import 'element-plus/es/components/table/style/css'
 import 'element-plus/es/components/pagination/style/css'
 import 'element-plus/es/components/loading/style/css'
 ```
+#### 普通使用
 
-### 全局设置
+```javascript
+import '@advanced-elements/table/es/index.css'
+```
 
-如果 element-plus 版本与组件一致时，不需作任何处理，否则需要手动传值。(建议保持一样版本)
+#### 配合namespace使用
 
-```vue
-<script lang="ts" setup>
-import { useGlobalConfig } from 'element-plus'
-import { AdvTable } from '@advanced-elements/table'
-const locale = useGlobalConfig('locale')
-const zIndex = useGlobalConfig('zIndex')
-const button = useGlobalConfig('button')
-const size = useGlobalConfig('size')
-</script>
-
-<template>
-  <adv-table
-    :locale="locale"
-    :z-index="zIndex"
-    :button="button"
-    :size="size"
-  ></adv-table>
-</template>
+```javascript
+import '@advanced-elements/table/style/index.scss'
 ```
