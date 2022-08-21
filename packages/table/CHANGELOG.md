@@ -1,5 +1,14 @@
 # @advanced-elements/table ChangeLog
 
+## 2.1.0
+
+### Minor Changes
+
+#### Chore
+
+- chore: update element-plus to v2.2.14 (42000dd)
+- chore: update rollup config (5e4d739)
+
 ## 2.0.20
 
 ### Patch Changes
