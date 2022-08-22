@@ -1,0 +1,37 @@
+/* .vitepress/theme/custom.css */
+table {
+  margin: 0;
+}
+
+.advtable {
+  &-main {
+    .el-table__header {
+      margin: 0 !important;
+      border-collapse: separate !important;
+    }
+    tr {
+      border-top: 0 !important;
+    }
+    td {
+      border: 0;
+      border-bottom: var(--el-table-border);
+    }
+    th {
+      border: 0;
+      font-size: 14px !important;
+    }
+    table {
+      table-layout: fixed !important;
+      border-collapse: separate !important;
+      margin: 0 !important;
+    }
+  }
+  ul,
+  ol {
+    margin: 0 !important;
+    list-style: none !important;
+  }
+  li {
+    margin-top: 0 !important;
+  }
+}

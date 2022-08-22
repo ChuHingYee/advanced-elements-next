@@ -7,6 +7,7 @@
 | 组件 |
 | --- |
 | adv-table |
+| adv-form |
 
 
 ## LICENSE

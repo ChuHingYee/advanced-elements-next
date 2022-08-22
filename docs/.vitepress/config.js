@@ -1,4 +1,4 @@
-module.exports = {
+export default {
   base: '/advanced-elements-next/',
   title: 'AdvancedElements',
   description: 'element-plus,advanced,中后台',
@@ -8,15 +8,14 @@ module.exports = {
       { text: '首页', link: '/' },
       { text: '指南', link: '/docs/getting-started' },
       { text: '组件', link: '/components/' },
-      { text: 'Github', link: 'https://github.com/ChuHingYee/advanced-elements-next' },
+      { text: 'Github', link: 'https:github.com/ChuHingYee/advanced-elements-next' },
     ],
     sidebar: {
       '/docs/': [
         {
           title: '文档',
           collapsable: false,
-          sidebarDepth: 1,
-          children: [{
+          items: [{
             text: '快速开始',
             link: '/docs/getting-started'
           }],
@@ -26,8 +25,7 @@ module.exports = {
         {
           title: '架构设计',
           collapsable: false,
-          sidebarDepth: 1,
-          children: [{
+          items: [{
             text: '组件总览',
             link: '/components/'
           }],
@@ -35,8 +33,7 @@ module.exports = {
         {
           title: '数据展示',
           collapsable: false,
-          sidebarDepth: 0,
-          children: [{
+          items: [{
             text: '表格',
             link: '/components/table'
           }],
@@ -44,8 +41,7 @@ module.exports = {
         {
           title: '表单',
           collapsable: false,
-          sidebarDepth: 0,
-          children: [{
+          items: [{
             text: '表单',
             link: '/components/form'
           }],
@@ -56,9 +52,5 @@ module.exports = {
   markdown: {
     anchor: { permalink: false },
     toc: { includeLevel: [1, 2] },
-    config: (md) => {
-      const { demoBlockPlugin } = require('vitepress-theme-demoblock')
-      md.use(demoBlockPlugin)
-    }
   }
 }
